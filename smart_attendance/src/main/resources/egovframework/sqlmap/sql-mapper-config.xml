@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+		<typeAlias alias="UserVo" type="egovframework.atoz.main.model.UserVo"/>
+		<typeAlias alias="UserDto" type="egovframework.atoz.main.security.UserDto"/>
+		<typeAlias alias="UserLoginDto" type="egovframework.atoz.main.model.UserLoginDto"/>
+		<typeAlias alias="UserConfirmDto" type="egovframework.atoz.main.model.UserConfirmDto"/>
+		<typeAlias alias="UserInfoDto" type="egovframework.atoz.main.model.UserInfoDto"/>
+
+		<typeAlias alias="CompanyVo" type="egovframework.atoz.main.model.CompanyVo"/>
+		
+		<typeAlias alias="ScheduleDto" type="egovframework.atoz.main.model.ScheduleDto"/>
+		<typeAlias alias="MyScheduleDto" type="egovframework.atoz.main.model.MyScheduleDto"/>
+		<typeAlias alias="AttendanceDto" type="egovframework.atoz.main.model.AttendanceDto"/>
+		
+		<typeAlias alias="NoticDto" type="egovframework.atoz.main.model.NoticDto"/>
+		<typeAlias alias="NoticPagingDto" type="egovframework.atoz.main.model.NoticPagingDto"/>
+	<!-- 	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/> -->
+    </typeAliases>
+</configuration>
