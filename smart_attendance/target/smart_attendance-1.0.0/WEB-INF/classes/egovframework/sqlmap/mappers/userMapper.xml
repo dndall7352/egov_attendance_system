@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.atoz.main.mapper.UserMapper">
+	<select id="userConfirm" resultType="UserVO" parameterType="UserVO">
+        SELECT * 
+        FROM em
+        WHERE e_no = #{e_no}
+        AND	tel = #{tel}
+    </select>
+    
+    <update id="pwUpdate" parameterType="UserVO">
+    	UPDATE em
+    	SET pw = #{pw},
+    	    profile = #{profile}
+    	WHERE e_no = #{e_no}
+    </update>
+    
+    <select id="userInfo" resultType="UserVO">
+    	SELECT *
+    	FROM em
+    	WHERE e_no = #{e_no}
+    </select>
+    
+    <select id="loginCheck" resultType="UserVO" parameterType="UserVO">
+    	SELECT *
+    	FROM em
+    	WHERE e_no = #{e_no}
+    	AND pw = #{pw}
+    </select>
+    
+    <select id="findByEno" resultType="UserVO">
+    	SELECT *
+    	FROM em
+    	WHERE e_no = #{e_no}
+    </select>
+</mapper>
