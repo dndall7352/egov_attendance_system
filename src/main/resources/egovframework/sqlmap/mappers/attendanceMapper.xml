@@ -34,4 +34,14 @@
 			WHERE TO_CHAR(dates, 'YYYY-MM-dd') = #{date}
 				AND emp_number = #{emp_number}
 	</select>
+	
+	<select id="getAttStatus" resultType="String" parameterType="MyScheduleDto">
+	    SELECT code.att_name
+	    FROM attendance att
+	    JOIN attendance_code code ON att.att_code = code.att_code
+	    WHERE TO_char(att.dates, 'YYYY-MM-DD') = #{date}
+	    AND att.emp_number = #{emp_number}
+	    ORDER BY att.dates
+
+	</select>
 </mapper>

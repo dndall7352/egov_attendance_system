@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="egovframework.atoz.main.mapper.NoticMapper"/>
+<mapper namespace="egovframework.atoz.main.mapper.NoticMapper">
+	<select id="readNoticList" resultType="NoticDto" parameterType="NoticPagingDto">
+		SELECT notic.num, notic.emp_number,notic.title, notic.content, notic.dates, dep.dep_name
+		FROM (
+		    SELECT notic.*,
+		    	 row_number() over(ORDER BY num desc) as row_num 
+		    FROM notic
+		    where com_number = #{com_number}
+		    ) notic
+		INNER JOIN department_info dep ON notic.dep_number = dep.dep_number
+		WHERE row_num between 1 + ((#{page} - 1) * 6) and 6 * #{page}
+		ORDER BY notic.num desc
+	
+	</select>
+	
+	<select id="noticAllCnt" resultType="int">
+		SELECT count(*)
+		FROM notic
+		WHERE com_number = #{com_number}
+	</select>
+</mapper>

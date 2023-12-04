@@ -33,4 +33,10 @@ public class AttendanceDaoImpl implements AttendanceDao {
 		AttendanceMapper mapper = sqlSession.getMapper(AttendanceMapper.class);
 		return mapper.todayAttendance(dto);
 	}
+	
+	@Override
+	public List<String> getAttStatus(MyScheduleDto dto) throws Exception {
+		AttendanceMapper mapper = sqlSession.getMapper(AttendanceMapper.class);
+		return mapper.getAttStatus(dto);
+	}
 }

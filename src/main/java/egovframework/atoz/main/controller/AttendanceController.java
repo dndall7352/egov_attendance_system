@@ -1,5 +1,6 @@
 package egovframework.atoz.main.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import egovframework.atoz.main.model.AttendanceDto;
 import egovframework.atoz.main.model.MyScheduleDto;
 import egovframework.atoz.main.model.UserInfoDto;
 import egovframework.atoz.main.service.AttendanceService;
+import egovframework.atoz.main.service.ScheduleService;
 import egovframework.atoz.main.service.UserService;
 
 @RestController
@@ -30,6 +32,8 @@ import egovframework.atoz.main.service.UserService;
 public class AttendanceController {
 	@Autowired
 	AttendanceService attendanceService;
+	@Autowired
+	ScheduleService scheduleService;
 	@Autowired
 	UserService userService;
 	
@@ -75,29 +79,57 @@ public class AttendanceController {
 	@ResponseBody
 	public ResponseEntity<?> todayAttendance(@RequestParam("date") String date) throws Exception{
 		System.out.println("오늘 근태 기록 조회");
-		boolean isWork = false;
-		boolean isClicked = false;
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		UserInfoDto userInfo = userService.userInfo(userDetails.getUsername());
-		
 		MyScheduleDto myScheduleDto = new MyScheduleDto();
 		myScheduleDto.setEmp_number(userInfo.getEmp_number());
 		myScheduleDto.setDate(date);
+		String schName = scheduleService.getSchStatus(myScheduleDto);
+		List<String> attName=  attendanceService.getAttStatus(myScheduleDto);
+		System.out.println(attName);
+		String lastAtt = null;
 		
-		List<AttendanceDto> todayAttendanceList = attendanceService.todayAttendance(myScheduleDto);
-		
-		for(AttendanceDto item : todayAttendanceList) {
-			if(item.getAtt_name().equals("출근")) {
-				isWork = true;
-			}else if(item.getAtt_name().equals("퇴근")) {
-				isClicked = true;
-			}
+		if(!attName.isEmpty()) {
+			lastAtt = attName.get(attName.size()-1);
 		}
-		Map<String, Boolean> isCheck = new HashMap<String, Boolean>();
-		isCheck.put("isWork", isWork);
-		isCheck.put("isClicked", isClicked);
-		return ResponseEntity.ok(isCheck);
+		System.out.println(lastAtt);
+		System.out.println(schName);
+		String statusName = null;
+		List<String> buttonList = new ArrayList<String>();
+		 if("출장".equals(schName) && !(attName.contains("복귀") || attName.contains("외근") || attName.contains("오후반차"))) {
+			 statusName = "출장중";
+			 buttonList = List.of("복귀", "외근", "오후반차");
+		 }else if("휴가".equals(schName)) {
+			 statusName = "휴가중";
+		 }else if("출근".equals(lastAtt) || "복귀".equals(lastAtt)) {
+			 statusName = "근무중";
+			 buttonList = List.of("퇴근", "출장", "외근", "오전반차", "오후반차");
+		 }else if("출장".equals(lastAtt)) {
+			 statusName = "출장중";
+			 buttonList = List.of("복귀", "외근", "오후반차");
+		 }else if("외근".equals(lastAtt)) {
+			 statusName = "외근중";
+			 buttonList = List.of("복귀", "출장", "오후반차");
+		 }else if("오후반차".equals(lastAtt)) {
+			 statusName = "오후반차";
+		 }else if("오전반차".equals(lastAtt)) {
+			 statusName = "오전반차";
+			 buttonList = List.of("복귀", "외근", "출장", "오후반차");
+		 }else if("퇴근".equals(lastAtt)) {
+			 statusName = "퇴근";
+		 }else {
+			 statusName = "출근전";
+			 buttonList = List.of("출근", "출장", "외근", "오전반차");
+		 }
+		 System.out.println(statusName);
+		 System.out.println(buttonList);
+		 Map<String, Object> responseData = new HashMap<String, Object>();
+		 responseData.put("statusName", statusName);
+		 responseData.put("buttonList", buttonList);
+		 
+		return ResponseEntity.ok(responseData);
 	}
 	
 }

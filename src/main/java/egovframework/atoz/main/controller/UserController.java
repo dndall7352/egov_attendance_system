@@ -1,29 +1,48 @@
 package egovframework.atoz.main.controller;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.DosFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.google.gson.Gson;
 
+import egovframework.atoz.main.model.EmployeeDto;
 import egovframework.atoz.main.model.JwtTokenDto;
+import egovframework.atoz.main.model.PhotoVo;
+import egovframework.atoz.main.model.SignUpDto;
 import egovframework.atoz.main.model.UserConfirmDto;
 import egovframework.atoz.main.model.UserInfoDto;
 import egovframework.atoz.main.model.UserLoginDto;
@@ -38,24 +57,58 @@ public class UserController {
 	@Autowired
 	JwtTokenProvider jwtTokenProvider;
 
+	private static final String UPLOAD_DIR = "C:/resources/";
+	
 	@PostMapping("/confirm")
 	public ResponseEntity<?> userConfirm(@RequestBody UserConfirmDto dto) throws Exception {
 		System.out.println("사용자 확인 시작");
 		UserInfoDto userinfo = userService.userConfirm(dto);
 
-		return new ResponseEntity<>(userinfo, HttpStatus.OK);
+		EmployeeDto emp = new EmployeeDto(userinfo);
+
+		return new ResponseEntity<>(emp, HttpStatus.OK);
 	}
 
-	@PutMapping("/signup")
-	public ResponseEntity<?> userSignUp(@RequestBody Map<String, String> requestBody) throws Exception {
-		System.out.println("사용자 승인 요청");
+	@PostMapping(value = "/signup")
+	public ResponseEntity<?> userSignUp(@ModelAttribute SignUpDto signUpDto) throws Exception {
 
+		System.out.println("사용자 승인 요청");
+		System.out.println(signUpDto.getEmp_number());
+		System.out.println(signUpDto.getPassword());
 		// 사용자 승인 요청 전송 sql 필요
 		UserVo userVO = new UserVo();
-		userVO.setEmp_number(requestBody.get("emp_number"));
-		userVO.setPassword(requestBody.get("password"));
-		userVO.setPhoto(requestBody.get("filePath"));
-		int cnt = userService.pwUpdate(userVO);
+		userVO.setEmp_number(signUpDto.getEmp_number());
+		userVO.setPassword(signUpDto.getPassword());
+		int cnt = 0;
+		if(!signUpDto.getFile().isEmpty()) {
+			String photo = userService.findPhoto(signUpDto.getEmp_number());
+			File photoPath = new File(UPLOAD_DIR+photo);
+			if(photo != null && photoPath.exists()) {
+				Files.deleteIfExists(photoPath.toPath());
+			}
+			
+			String filePath = signUpDto.getFile().getOriginalFilename();
+			int index = filePath.lastIndexOf('.');
+			String extension = filePath.substring(index);
+			String uuid = UUID.randomUUID().toString();
+			
+			userVO.setPhoto(uuid+extension);
+			System.out.println(signUpDto.getFile());
+			cnt = userService.pwAndPhotoUpdate(userVO);
+			File dir = new File(UPLOAD_DIR);
+			
+			if(!dir.exists()) {
+				dir.mkdirs();
+			}
+			Path path = Paths.get(UPLOAD_DIR, uuid+extension);
+
+			Files.write(path, signUpDto.getFile().getBytes());
+			
+		}else {
+			cnt = userService.pwUpdate(userVO);
+		}
+		
+
 		return new ResponseEntity<>(cnt, HttpStatus.OK);
 	}
 
@@ -65,8 +118,8 @@ public class UserController {
 
 		String emp_number = requsetBody.get("emp_number");
 		UserInfoDto userinfo = userService.userInfo(emp_number);
-
-		return new ResponseEntity<>(userinfo, HttpStatus.OK);
+		EmployeeDto emp = new EmployeeDto(userinfo);
+		return new ResponseEntity<>(emp, HttpStatus.OK);
 	}
 
 	@PostMapping("/login")
@@ -75,7 +128,7 @@ public class UserController {
 		String result;
 
 		UserVo userVO = userService.loginCheck(userLoginDto);
-System.out.println(userVO);
+
 		if (userVO == null) {
 			result = "mismatch";
 			return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
@@ -99,7 +152,8 @@ System.out.println(userVO);
 		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		 UserInfoDto userInfo = userService.userInfo(userDetails.getUsername());
+		 EmployeeDto emp = new EmployeeDto(userInfo);
 
-		 return ResponseEntity.ok(userInfo);
+		 return ResponseEntity.ok(emp);
 	}
 }

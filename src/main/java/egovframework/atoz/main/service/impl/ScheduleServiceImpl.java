@@ -19,4 +19,8 @@ public class ScheduleServiceImpl implements ScheduleService{
 	public List<ScheduleDto> mySchedule(MyScheduleDto dto) throws Exception {
 		return scheduleDao.mySchedule(dto);
 	}
+	@Override
+	public String getSchStatus(MyScheduleDto dto) throws Exception {
+		return scheduleDao.getSchStatus(dto);
+	}
 }

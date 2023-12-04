@@ -10,4 +10,12 @@
 				OR TO_CHAR(end_time, 'YYYY-MM') = #{date})
 				AND emp_number = #{emp_number}
 	</select>
+	
+	<select id="getSchStatus" resultType="String" parameterType="MyScheduleDto">
+		SELECT code.sch_name 
+		FROM schedule sch, schedule_code code 
+		WHERE TO_DATE(#{date}, 'yyyy-MM-dd') BETWEEN start_time-1 AND end_time 
+		AND sch.sch_code = code.sch_code 
+		AND sch.emp_number = #{emp_number}
+	</select>
 </mapper>

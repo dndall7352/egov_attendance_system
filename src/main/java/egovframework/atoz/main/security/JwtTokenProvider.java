@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,15 +31,18 @@ import io.jsonwebtoken.Jwts;
 @Slf4j
 @RequiredArgsConstructor
 @Component
+@PropertySource("classpath:application.properties")
 public class JwtTokenProvider{ // JWT 토큰을 생성 및 검증 모듈
 
 	private final Key key;
 	@Autowired
 	UserDetailsService userDetailsSercive;
+
 	long accessTokenDate = System.currentTimeMillis() + 1000 * 60 * 30;
 	long refreshTokenDate = System.currentTimeMillis() + 1000 * 60 * 60 * 30;
-    public JwtTokenProvider() {
-        String secretKey = "asfdslkdskjfldksfjsdlkdfjlsdkfjskjklhjkgdtydrtasdsdasdxfvgdlfj";
+	
+	@Autowired
+    public JwtTokenProvider(@Value("${jwt.secret}")	String secretKey) {
         byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
         this.key = Keys.hmacShaKeyFor(secretByteKey);
     }

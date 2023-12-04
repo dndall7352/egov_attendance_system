@@ -7,4 +7,5 @@ import egovframework.atoz.main.model.ScheduleDto;
 
 public interface ScheduleDao {
 	List<ScheduleDto> mySchedule(MyScheduleDto dto) throws Exception;
+	String getSchStatus(MyScheduleDto dto) throws Exception;
 }

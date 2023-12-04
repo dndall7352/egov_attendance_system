@@ -29,4 +29,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public List<AttendanceDto> todayAttendance(MyScheduleDto dto) throws Exception {
 		return attendanceDao.todayAttendance(dto);
 	}
+	@Override
+	public List<String> getAttStatus(MyScheduleDto dto) throws Exception {
+		return attendanceDao.getAttStatus(dto);
+	}
 }

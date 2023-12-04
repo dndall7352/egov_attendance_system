@@ -41,7 +41,8 @@ public class SecurityConfig {
         				"/login",
         				"/signup",
         				"/confirm",
-        				"/logininfo"
+        				"/logininfo",
+        				"/company"
         				).permitAll()
 //        		.antMatchers("/signup").permitAll()
 //        		.antMatchers("/confirm").permitAll()

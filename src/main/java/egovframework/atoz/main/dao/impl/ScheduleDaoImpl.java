@@ -21,4 +21,9 @@ public class ScheduleDaoImpl implements ScheduleDao{
 		ScheduleMapper mapper = sqlSession.getMapper(ScheduleMapper.class);
 		return mapper.mySchedule(dto);
 	}
+	@Override
+	public String getSchStatus(MyScheduleDto dto) throws Exception {
+		ScheduleMapper mapper = sqlSession.getMapper(ScheduleMapper.class);
+		return mapper.getSchStatus(dto);
+	}
 }

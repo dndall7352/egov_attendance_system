@@ -24,9 +24,15 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public int pwUpdate(UserVo userVO) throws Exception {
+	public int pwUpdate(UserVo userVo) throws Exception {
 		UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-		return mapper.pwUpdate(userVO);
+		return mapper.pwUpdate(userVo);
+	}
+	
+	@Override
+	public int pwAndPhotoUpdate(UserVo userVo) throws Exception {
+		UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+		return mapper.pwAndPhotoUpdate(userVo);
 	}
 
 	@Override
@@ -51,5 +57,11 @@ public class UserDaoImpl implements UserDao {
 	public UserVo decodeToken(String emp_number) throws Exception {
 		UserMapper mapper = sqlSession.getMapper(UserMapper.class);
 		return mapper.decodeToken(emp_number);
+	}
+	
+	@Override
+	public String findPhoto(String emp_number) throws Exception {
+		UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+		return mapper.findPhoto(emp_number);
 	}
 }

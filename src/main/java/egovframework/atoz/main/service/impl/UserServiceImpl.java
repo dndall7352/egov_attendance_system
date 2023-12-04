@@ -20,8 +20,12 @@ public class UserServiceImpl implements UserService{
 		return userDAO.userConfirm(dto);
 	}
 	@Override
-	public int pwUpdate(UserVo userVO) throws Exception {
-		return userDAO.pwUpdate(userVO);
+	public int pwUpdate(UserVo userVo) throws Exception {
+		return userDAO.pwUpdate(userVo);
+	}
+	@Override
+	public int pwAndPhotoUpdate(UserVo userVo) throws Exception {
+		return userDAO.pwAndPhotoUpdate(userVo);
 	}
 	@Override
 	public UserInfoDto userInfo(String emp_number) throws Exception {
@@ -40,5 +44,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserVo decodeToken(String emp_number) throws Exception {
 		return userDAO.decodeToken(emp_number);
+	}
+	@Override
+	public String findPhoto(String emp_number) throws Exception {
+		return userDAO.findPhoto(emp_number);
 	}
 }

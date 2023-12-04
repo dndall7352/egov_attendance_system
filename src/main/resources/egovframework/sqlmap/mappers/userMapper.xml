@@ -14,8 +14,14 @@
     
     <update id="pwUpdate" parameterType="UserVO">
     	UPDATE employee
+    	SET password = #{password}
+    	WHERE emp_number = #{emp_number}
+    </update>
+    
+    <update id="pwAndPhotoUpdate" parameterType="UserVO">
+    	UPDATE employee
     	SET password = #{password},
-    	    photo = #{photo}
+    		photo = #{photo}
     	WHERE emp_number = #{emp_number}
     </update>
     
@@ -45,5 +51,11 @@
     	FROM employee emp, authority aut
     	WHERE emp_number = #{emp_number}
     	AND emp.aut_number = aut.aut_number
+    </select>
+    
+    <select id="findPhoto" resultType="String">
+    	SELECT photo
+    	FROM employee
+    	WHERE emp_number = #{emp_number}
     </select>
 </mapper>
