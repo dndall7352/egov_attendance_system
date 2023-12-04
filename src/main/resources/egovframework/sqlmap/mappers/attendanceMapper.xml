@@ -8,6 +8,7 @@
 			INNER JOIN attendance_code code ON att.att_code = code.att_code
 			WHERE TO_CHAR(dates, 'YYYY-MM') = #{date}
 				AND emp_number = #{emp_number}
+			ORDER BY dates
 	</select>
 	
 	<insert id="setAttendance" parameterType="AttendanceDto">
