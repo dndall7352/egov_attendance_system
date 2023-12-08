@@ -1,0 +1,81 @@
+*{
+    font-family: 'Nanum Gothic';
+}
+table.table-striped.table-hover td, .table td {
+    border: 1px solid #fff;
+    text-align: center;
+}
+table.table.table-striped.table-hover tbody tr{
+    height: 45px;
+}
+
+thead td {
+    background-color: #4472C4 !important;
+    color: white !important;
+    padding: .1rem .1rem !important;
+    font-weight: 600;
+    font-style: italic;
+}
+.thead{
+    background-color: #4472C4 !important;
+    color: #fff !important;
+    padding: .3rem .3rem !important;
+    font-weight: 600;
+    font-style: italic;
+    vertical-align: middle;
+}
+td[rowspan] {
+    vertical-align: middle;
+}
+.table .table-input{
+    text-align: left;
+    background-color: #D8E2F3;
+}
+.table .table-input .table-input-text{
+    width: 100%;
+    outline: none; 
+    border: none; 
+    background-color: #D8E2F3 ;
+}
+.col-1 {
+    width: 5%;
+}
+
+.col-2 {
+    width: 18%;
+}
+
+.col-3 {
+    width: 35%;
+}
+
+.col-4 {
+    width: 15%;
+}
+
+.col-5 {
+    width: 5%;
+}
+
+.col-6 {
+    width: 13%;
+}
+#beacon-state div{
+    display: flex; 
+    width: 40px; 
+    height: 30px; 
+    color: #fff;
+    align-items: center; 
+    justify-content: center; 
+}
+#beacon-state .selected{
+    display: flex; 
+    width: 40px; 
+    height: 30px; 
+    background-color: #FFC647; 
+    border-radius: 50px; 
+    align-items: center; 
+    justify-content: center; 
+    color: red; 
+    font-weight: 600;
+}

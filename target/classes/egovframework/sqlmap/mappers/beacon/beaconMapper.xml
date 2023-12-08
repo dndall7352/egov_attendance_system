@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="egovframework.atoz.main.beacon.service.impl.BeaconMapper">
+	<select id="selectBeaconList" parameterType="egovframework.atoz.main.beacon.service.BeaconDTO" resultType="egovMap">
+		<!-- select bc.beacon_number, bc.uuid, com.com_name, com.com_number, bc.major, bc.minor, bc.use, bc.note
+		from beacon_info bc, company_info com, department_info dep
+		where bc.dep_number = dep.dep_number
+		and dep.com_number = com.com_number -->
+		
+		SELECT * FROM (
+	SELECT A.*, ROWNUM RNUM FROM (
+				SELECT
+						bc.beacon_number, bc.uuid, com.com_name, com.com_number, bc.major, bc.minor, bc.use, bc.note
+						FROM beacon_info bc, company_info com, department_info dep
+				WHERE 1=1
+				and bc.dep_number = dep.dep_number
+				and dep.com_number = com.com_number
+				<!-- <if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 0">AND
+						CODE = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1">AND
+						CODE_GROUP LIKE '%' || #{searchKeyword} || '%'
+					</if>
+				</if> -->
+					ORDER BY 
+						bc.beacon_number DESC
+		
+		<![CDATA[					
+	) A WHERE ROWNUM <= #{lastIndex}
+)WHERE RNUM > #{firstIndex}
+]]>
+	</select>
+	
+	<select id="selectBeaconListTotCnt" parameterType="egovframework.atoz.main.beacon.service.BeaconDTO" resultType="int">
+		SELECT COUNT(*) totcnt
+			FROM beacon_info
+			WHERE 1=1
+			<!-- <if test="searchKeyword != null and searchKeyword != ''">
+				<if test="searchCondition == 0">AND
+					COM_NUMBER = #{searchKeyword}
+				</if>
+				<if test="searchCondition == 1">AND
+					COM_NAME LIKE '%' || #{searchKeyword} || '%'
+				</if>
+			</if> -->
+	</select>
+</mapper>

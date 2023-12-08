@@ -67,12 +67,12 @@ public class SecurityConfig{
         return http.build();
     }
     
-//    @Bean
-//    public HttpFirewall customHttpFirewall() {
-//        StrictHttpFirewall firewall = new StrictHttpFirewall();
-//        firewall.setAllowUrlEncodedDoubleSlash(true);
-//        return firewall;
-//    }
+    @Bean
+    public HttpFirewall customHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedDoubleSlash(true);
+        return firewall;
+    }
     
 //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
