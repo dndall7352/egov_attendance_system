@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- <mapper namespace="codeDAO"> -->
+<mapper namespace="egovframework.atoz.main.code.service.impl.CodeMapper">
+	
+
+	<resultMap id="code" type="egovframework.atoz.main.code.service.CodeVO">
+		<result property="code" column="CODE" />
+		<result property="codeGroup" column="CODE_GROUP" />
+		<result property="PCode" column="P_CODE" />
+		<result property="codeName" column="CODE_NAME" />
+		<result property="deth" column="DETH" />
+	</resultMap>
+	
+	<insert id="insertCode">
+		<![CDATA[
+			INSERT INTO CODE 
+				( CODE
+				  , CODE_GROUP
+				  , P_CODE
+				  , CODE_NAME
+				  , DETH )
+			VALUES ( #{code}
+				  , #{codeGroup}
+				  , #{PCode}
+				  , #{codeName}
+				  , #{deth} )
+		]]>
+	</insert>
+	
+	<update id="updateCode">
+		<![CDATA[
+			UPDATE CODE
+			SET CODE=#{code}
+				, CODE_GROUP=#{codeGroup}
+				, P_CODE=#{PCode}
+				, CODE_NAME=#{codeName}
+				, DETH=#{deth}
+						WHERE CODE=#{code}
+				]]>
+	</update>
+	
+	<delete id="deleteCode">
+		<![CDATA[
+			DELETE FROM CODE 
+						WHERE CODE=#{code}
+				]]>
+	</delete>
+	
+	<select id="selectCode" resultMap="code">
+		<![CDATA[
+			SELECT
+				CODE
+				, CODE_GROUP
+				, P_CODE
+				, CODE_NAME
+				, DETH
+			FROM CODE
+						WHERE CODE=#{code}
+				]]>
+	</select>
+	
+	<select id="selectCodeList" parameterType="egovframework.atoz.main.code.service.CodeVO" resultType="egovMap">
+SELECT * FROM (
+	SELECT A.*, ROWNUM RNUM FROM (
+				SELECT
+								CODE
+								, CODE_GROUP
+								, P_CODE
+								, CODE_NAME
+								, DETH
+						FROM CODE
+				WHERE 1=1
+				<if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 0">AND
+						CODE = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1">AND
+						CODE_GROUP LIKE '%' || #{searchKeyword} || '%'
+					</if>
+				</if>
+					ORDER BY 
+						CODE DESC
+		
+		<![CDATA[					
+	) A WHERE ROWNUM <= #{lastIndex}
+)WHERE RNUM > #{firstIndex}
+]]>
+	</select>	
+	<select id="selectCodeListTotCnt" parameterType="egovframework.atoz.main.code.service.CodeVO" resultType="int">
+			SELECT COUNT(*) totcnt
+			FROM CODE
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<if test="searchCondition == 0">AND
+					CODE = #{searchKeyword}
+				</if>
+				<if test="searchCondition == 1">AND
+					CODE_GROUP LIKE '%' || #{searchKeyword} || '%'
+				</if>
+			</if>
+	</select>
+
+</mapper>

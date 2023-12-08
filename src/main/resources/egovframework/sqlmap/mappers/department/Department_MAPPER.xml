@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- <mapper namespace="departmentDAO"> -->
+<mapper namespace="egovframework.atoz.main.department.service.impl.DepartmentMapper">
+	
+
+	<resultMap id="department" type="egovframework.atoz.main.department.service.DepartmentVO">
+		<result property="depNumber" column="DEP_NUMBER" />
+		<result property="comName" column="COM_NAME"/>
+		<result property="depName" column="DEP_NAME" />
+	</resultMap>
+
+	
+	<insert id="insertDepartment" parameterType="DepartmentVO">
+		<![CDATA[
+			INSERT INTO DEPARTMENT_INFO
+				( DEP_NUMBER
+				  , COM_NUMBER
+				  , DEP_NAME )
+			VALUES ( #{depNumber}
+				  , (select com_number from company_info where com_name = #{comName})
+				  , #{depName} )
+		]]>
+	</insert>
+	
+	<update id="updateDepartment">
+		<![CDATA[
+			UPDATE DEPARTMENT_info
+			SET DEP_NAME=#{depName}
+						WHERE DEP_NUMBER=#{depNumber}
+				]]>
+	</update>
+	
+	<delete id="deleteDepartment">
+		<![CDATA[
+			DELETE FROM DEPARTMENT_info
+						WHERE DEP_NUMBER=#{depNumber}
+				]]>
+	</delete>
+	
+	<select id="selectDepartment" parameterType="DepartmentVO" resultType="egovMap">
+		<![CDATA[
+			SELECT
+				dep.DEP_NUMBER
+				, com.COM_NAME
+				, dep.DEP_NAME
+			FROM DEPARTMENT_info dep, company_info com
+						WHERE dep.DEP_NUMBER=#{depNumber}
+						AND dep.com_number = com.com_number
+				]]>
+	</select>
+	
+	<select id="selectDepartmentList" parameterType="DepartmentVO" resultType="egovMap">
+SELECT * FROM (
+	SELECT A.*, ROWNUM RNUM FROM (
+				SELECT
+								dep.DEP_NUMBER
+								, com.COM_NAME
+								, dep.DEP_NAME
+						FROM DEPARTMENT_INFO dep, company_info com
+				WHERE 1=1
+				<if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 0">AND
+						dep.DEP_NUMBER = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1">AND
+						com.COM_NAME LIKE '%' || #{searchKeyword} || '%'
+					</if>
+				</if>
+				AND dep.com_number = com.com_number
+					ORDER BY 
+						DEP_NUMBER DESC
+		
+		<![CDATA[					
+	) A WHERE ROWNUM <= #{lastIndex}
+)WHERE RNUM > #{firstIndex}
+]]>
+	</select>	
+	<select id="selectDepartmentListTotCnt" parameterType="DepartmentVO" resultType="int">
+			SELECT COUNT(*) totcnt
+			FROM DEPARTMENT_info dep, company_info com
+			WHERE 1=1
+			AND dep.com_number = com.com_number
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<if test="searchCondition == 0">AND
+					dep.DEP_NUMBER = #{searchKeyword}
+				</if>
+				<if test="searchCondition == 1">AND
+					com.COM_NAME LIKE '%' || #{searchKeyword} || '%'
+				</if>
+			</if>
+	</select>
+
+</mapper>

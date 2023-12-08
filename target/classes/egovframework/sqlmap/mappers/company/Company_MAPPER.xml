@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- <mapper namespace="companyDAO"> -->
+<mapper namespace="egovframework.atoz.main.company.service.impl.CompanyMapper">
+	
+
+	<resultMap id="company" type="egovframework.atoz.main.company.service.CompanyVO">
+		<result property="comNumber" column="COM_NUMBER" />
+		<result property="comName" column="COM_NAME" />
+		<result property="comCi" column="COM_CI" />
+	</resultMap>
+	
+	<insert id="insertCompany">
+		<![CDATA[
+			INSERT INTO COMPANY_info
+				( COM_NUMBER
+				  , COM_NAME
+				  , COM_CI )
+			VALUES ( #{comNumber}
+				  , #{comName}
+				  , #{comCi} )
+		]]>
+	</insert>
+	
+	<update id="updateCompany">
+		<![CDATA[
+			UPDATE COMPANY_info
+			SET COM_NUMBER=#{comNumber}
+				, COM_NAME=#{comName}
+				, COM_CI=#{comCi}
+						WHERE COM_NUMBER=#{comNumber}
+				]]>
+	</update>
+	
+	<delete id="deleteCompany">
+		<![CDATA[
+			DELETE FROM COMPANY_info
+						WHERE COM_NUMBER=#{comNumber}
+				]]>
+	</delete>
+	
+	<select id="selectCompany" resultMap="company">
+		<![CDATA[
+			SELECT
+				COM_NUMBER
+				, COM_NAME
+				, COM_CI
+			FROM COMPANY_info
+						WHERE COM_NUMBER=#{comNumber}
+				]]>
+	</select>
+	
+	<select id="selectCompanyList" parameterType="egovframework.atoz.main.company.service.CompanyDefaultVO" resultType="egovMap">
+SELECT * FROM (
+	SELECT A.*, ROWNUM RNUM FROM (
+				SELECT
+								COM_NUMBER
+								, COM_NAME
+								, COM_CI
+						FROM COMPANY_info
+				WHERE 1=1
+				<if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 0">AND
+						COM_NUMBER = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1">AND
+						COM_NAME LIKE '%' || #{searchKeyword} || '%'
+					</if>
+				</if>
+					ORDER BY 
+						COM_NUMBER DESC
+		
+		<![CDATA[					
+	) A WHERE ROWNUM <= #{lastIndex}
+)WHERE RNUM > #{firstIndex}
+]]>
+	</select>	
+	<select id="selectCompanyListTotCnt" parameterType="egovframework.atoz.main.company.service.CompanyVO" resultType="int">
+			SELECT COUNT(*) totcnt
+			FROM COMPANY_info
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<if test="searchCondition == 0">AND
+					COM_NUMBER = #{searchKeyword}
+				</if>
+				<if test="searchCondition == 1">AND
+					COM_NAME LIKE '%' || #{searchKeyword} || '%'
+				</if>
+			</if>
+	</select>
+
+</mapper>
