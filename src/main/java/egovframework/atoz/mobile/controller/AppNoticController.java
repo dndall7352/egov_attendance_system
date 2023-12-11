@@ -21,7 +21,7 @@ import egovframework.atoz.mobile.service.ScheduleService;
 import egovframework.atoz.mobile.service.UserService;
 
 @RestController
-public class NoticController {
+public class AppNoticController {
 	@Autowired
 	JwtTokenProvider jwtTokenProvider;
 	@Autowired

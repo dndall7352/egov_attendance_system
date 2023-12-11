@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- <mapper namespace="noticDAO"> -->
+<mapper namespace="egovframework.atoz.main.notic.service.impl.NoticMapper">
+	
+
+	<resultMap id="notic" type="egovframework.atoz.main.notic.service.NoticVO">
+		<result property="num" column="NUM" />
+		<result property="empNumber" column="EMP_NUMBER" />
+		<result property="comNumber" column="COM_NUMBER" />
+		<result property="depNumber" column="DEP_NUMBER" />
+		<result property="title" column="TITLE" />
+		<result property="content" column="CONTENT" />
+		<result property="dates" column="DATES" />
+	</resultMap>
+	
+	<insert id="insertNotic">
+		<![CDATA[
+			INSERT INTO NOTIC 
+				( NUM
+				  , EMP_NUMBER
+				  , COM_NUMBER
+				  , DEP_NUMBER
+				  , TITLE
+				  , CONTENT
+				  , DATES )
+			VALUES ( #{num}
+				  , #{empNumber}
+				  , #{comNumber}
+				  , #{depNumber}
+				  , #{title}
+				  , #{content}
+				  , #{dates} )
+		]]>
+	</insert>
+	
+	<update id="updateNotic">
+		<![CDATA[
+			UPDATE NOTIC
+			SET NUM=#{num}
+				, EMP_NUMBER=#{empNumber}
+				, COM_NUMBER=#{comNumber}
+				, DEP_NUMBER=#{depNumber}
+				, TITLE=#{title}
+				, CONTENT=#{content}
+				, DATES=#{dates}
+						WHERE NUM=#{num}
+				]]>
+	</update>
+	
+	<delete id="deleteNotic">
+		<![CDATA[
+			DELETE FROM NOTIC 
+						WHERE NUM=#{num}
+				]]>
+	</delete>
+	
+	<select id="selectNotic" resultMap="notic">
+		<![CDATA[
+			SELECT
+				NUM
+				, EMP_NUMBER
+				, COM_NUMBER
+				, DEP_NUMBER
+				, TITLE
+				, CONTENT
+				, DATES
+			FROM NOTIC
+						WHERE NUM=#{num}
+				]]>
+	</select>
+	
+	<select id="selectNoticList" parameterType="egovframework.atoz.main.notic.service.NoticVO" resultType="egovMap">
+SELECT * FROM (
+	SELECT A.*, ROWNUM RNUM FROM (
+				SELECT
+								NUM
+								, EMP_NUMBER
+								, COM_NUMBER
+								, DEP_NUMBER
+								, TITLE
+								, CONTENT
+								, DATES
+						FROM NOTIC
+				WHERE 1=1
+				<if test="searchKeyword != null and searchKeyword != ''">
+					<if test="searchCondition == 0">AND
+						NUM = #{searchKeyword}
+					</if>
+					<if test="searchCondition == 1">AND
+						EMP_NUMBER LIKE '%' || #{searchKeyword} || '%'
+					</if>
+				</if>
+					ORDER BY 
+						NUM DESC
+		
+		<![CDATA[					
+	) A WHERE ROWNUM <= #{lastIndex}
+)WHERE RNUM > #{firstIndex}
+]]>
+	</select>	
+	<select id="selectNoticListTotCnt" parameterType="egovframework.atoz.main.notic.service.NoticVO" resultType="int">
+			SELECT COUNT(*) totcnt
+			FROM NOTIC
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<if test="searchCondition == 0">AND
+					NUM = #{searchKeyword}
+				</if>
+				<if test="searchCondition == 1">AND
+					EMP_NUMBER LIKE '%' || #{searchKeyword} || '%'
+				</if>
+			</if>
+	</select>	
+
+</mapper>
