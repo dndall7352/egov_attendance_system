@@ -93,6 +93,7 @@ public class DepartmentServiceImpl extends EgovAbstractServiceImpl implements
     public DepartmentVO selectDepartment(DepartmentVO vo) throws Exception {
         DepartmentVO resultVO = departmentDAO.selectDepartment(vo);
         if (resultVO == null)
+        	
             throw processException("info.nodata.msg");
         return resultVO;
     }

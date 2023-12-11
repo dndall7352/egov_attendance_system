@@ -69,7 +69,7 @@ public class DepartmentDAO{
 	 */
     public DepartmentVO selectDepartment(DepartmentVO vo) throws Exception {
     	DepartmentMapper mapper = sqlSession.getMapper(DepartmentMapper.class);
-		return (DepartmentVO)mapper.selectDepartment(vo);
+		return mapper.selectDepartment(vo);
     }
 
     /**

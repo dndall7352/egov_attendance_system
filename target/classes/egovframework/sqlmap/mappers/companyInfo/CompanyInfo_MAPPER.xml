@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- <mapper namespace="companyInfoDAO"> -->
+<mapper
+	namespace="egovframework.atoz.main.companyInfo.service.impl.CompanyInfoMapper">
+
+	<resultMap id="companyInfo"
+		type="egovframework.atoz.main.companyInfo.service.CompanyInfoVO">
+		<result property="comNumber" column="COM_NUMBER" />
+		<result property="num" column="NUM" />
+		<result property="comName" column="COM_NAME" />
+		<result property="comCi" column="COM_CI" />
+		<result property="comEmail" column="COM_EMAIL" />
+		<result property="ceoName" column="CEO_NAME" />
+		<result property="zipCode" column="ZIP_CODE" />
+		<result property="address1" column="ADDRESS1" />
+		<result property="address2" column="ADDRESS2" />
+		<result property="note" column="NOTE" />
+		<result property="use" column="USE" />
+		<result property="uuid" column="UUID" />
+		<result property="name" column="NAME" />
+		<result property="phone" column="PHONE" />
+		<result property="password" column="PASSWORD" />
+		<result property="empNumber" column="EMP_NUMBER" />
+		<result property="id" column="ID" />
+		<result property="ceoPhone" column="CEO_PHONE" />
+
+	</resultMap>
+
+	<insert id="insertCompanyInfo" useGeneratedKeys="true"
+		keyProperty="num">
+   <![CDATA[
+      INSERT INTO COMPANY_INFO 
+         ( COM_NUMBER
+           , NUM
+           , COM_NAME
+           , COM_CI
+           , COM_EMAIL
+           , CEO_NAME
+           , ZIP_CODE
+           , ADDRESS1
+           , ADDRESS2
+           , NOTE
+           , CEO_PHONE
+           , USE )
+      VALUES ( #{comNumber}
+           , SCOMPANY_SEQ.nextval
+           , #{comName}
+           , #{fileName}
+           , #{comEmail}
+           , #{ceoName}
+           , #{zip_code}
+           , #{address_1}
+           , #{address_2}
+           , #{note}
+           , #{ceoPhone}
+           , #{use} )
+   ]]>
+	</insert>
+
+	<update id="updateCompanyInfo">
+		<![CDATA[
+			UPDATE COMPANY_INFO
+			SET COM_NUMBER=#{comNumber}
+				, NUM=#{num}
+				, COM_NAME=#{comName}
+				, COM_CI=#{fileName}
+				, COM_EMAIL=#{comEmail}
+				, CEO_NAME=#{ceoName}
+				, ZIP_CODE=#{zip_code}
+				, ADDRESS1=#{address_1}
+				, ADDRESS2=#{address_2}
+				, NOTE=#{note}
+				, CEO_PHONE=#{ceoPhone}
+				, USE=#{USE}
+						WHERE COM_NUMBER=#{comNumber}
+				]]>
+	</update>
+
+	<delete id="deleteCompanyInfo">
+		<![CDATA[
+			DELETE FROM COMPANY_INFO 
+						WHERE COM_NUMBER=#{comNumber}
+				]]>
+	</delete>
+
+	<select id="selectCompanyInfo" resultMap="companyInfo">
+		<![CDATA[
+			SELECT *
+			FROM COMPANY_INFO
+						WHERE COM_NUMBER=#{comNumber}
+				]]>
+	</select>
+
+	<select id="selectCompanyInfoList"
+		parameterType="egovframework.atoz.main.companyInfo.service.CompanyInfoVO"
+		resultType="egovMap">
+		select com.*, emp.name name, emp.phone phone, emp.password password, emp.emp_number emp_number, emp.id id
+from company_info com, employee emp
+where com.com_email = emp.email
+
+		
+		<!-- SELECT A.*, ROWNUM AS RNUM, employee_count, beacon_count
+		FROM (
+		    SELECT c.*, e.name name, e.phone phone, e.password password, e.emp_number emp_number, e.id id
+		    FROM COMPANY_INFO c
+		    LEFT JOIN DEPARTMENT_INFO d ON c.COM_NUMBER = d.COM_NUMBER
+		    LEFT JOIN EMPLOYEE e ON d.DEP_NUMBER = e.DEP_NUMBER
+		    LEFT JOIN BEACON_INFO b ON d.DEP_NUMBER = b.DEP_NUMBER
+		    <if test="searchKeyword != null and searchKeyword != ''">
+		        <if test="searchCondition == 0">AND COM_NUMBER = #{searchKeyword}</if>
+		        <if test="searchCondition == 1">AND NUM LIKE '%' || #{searchKeyword} || '%'</if>
+		    </if>
+		    ORDER BY c.COM_NUMBER DESC
+		    <![CDATA[ 
+		) A
+		INNER JOIN (
+		    SELECT COUNT(e.DEP_NUMBER) AS employee_count, c.COM_NUMBER
+		    FROM COMPANY_INFO c
+		    LEFT JOIN DEPARTMENT_INFO d ON c.COM_NUMBER = d.COM_NUMBER
+		    LEFT JOIN EMPLOYEE e ON d.DEP_NUMBER = e.DEP_NUMBER
+		    GROUP BY c.COM_NUMBER
+		) B ON A.COM_NUMBER = B.COM_NUMBER
+		INNER JOIN (
+		    SELECT COUNT(b.DEP_NUMBER) AS beacon_count, c.COM_NUMBER
+		    FROM COMPANY_INFO c
+		    LEFT JOIN DEPARTMENT_INFO d ON c.COM_NUMBER = d.COM_NUMBER
+		    LEFT JOIN BEACON_INFO b ON d.DEP_NUMBER = b.DEP_NUMBER
+		    GROUP BY c.COM_NUMBER
+		) C ON A.COM_NUMBER = C.COM_NUMBER
+		WHERE ROWNUM > #{firstIndex} AND ROWNUM <= #{lastIndex}
+		]]> -->
+
+	</select>
+
+
+	<select id="selectCompanyInfoListTotCnt"
+		parameterType="egovframework.atoz.main.companyInfo.service.CompanyInfoVO"
+		resultType="int">
+		SELECT COUNT(*) totcnt
+		FROM COMPANY_INFO
+		WHERE 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			<if test="searchCondition == 0">AND
+				COM_NUMBER = #{searchKeyword}
+			</if>
+			<if test="searchCondition == 1">AND
+				NUM LIKE '%' || #{searchKeyword} || '%'
+			</if>
+		</if>
+	</select>
+
+</mapper>

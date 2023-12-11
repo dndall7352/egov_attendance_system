@@ -120,6 +120,7 @@ public class DepartmentController {
             DepartmentVO departmentVO,
             @ModelAttribute("searchVO") DepartmentDefaultVO searchVO) throws Exception {
     	System.out.println("해당 부서 선택");
+    	System.out.println(departmentVO);
     	DepartmentVO resultVO = departmentService.selectDepartment(departmentVO);
     	System.out.println(resultVO);
         return resultVO;

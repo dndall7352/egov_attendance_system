@@ -39,16 +39,14 @@
 				]]>
 	</delete>
 	
-	<select id="selectDepartment" parameterType="DepartmentVO" resultType="egovMap">
-		<![CDATA[
+	<select id="selectDepartment" parameterType="DepartmentVO" resultType="DepartmentVO">
 			SELECT
-				dep.DEP_NUMBER
-				, com.COM_NAME
-				, dep.DEP_NAME
+				dep.DEP_NUMBER depNumber
+				, com.COM_NAME comName
+				, dep.DEP_NAME depName
 			FROM DEPARTMENT_info dep, company_info com
 						WHERE dep.DEP_NUMBER=#{depNumber}
 						AND dep.com_number = com.com_number
-				]]>
 	</select>
 	
 	<select id="selectDepartmentList" parameterType="DepartmentVO" resultType="egovMap">

@@ -22,7 +22,7 @@ public class DepartmentVO extends DepartmentDefaultVO{
     private String comName;
     
     /** DEP_NAME */
-    private java.lang.String depName;
+    private String depName;
     
     public java.math.BigDecimal getDepNumber() {
         return this.depNumber;
