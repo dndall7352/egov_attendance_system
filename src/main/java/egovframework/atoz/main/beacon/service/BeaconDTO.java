@@ -16,5 +16,4 @@ public class BeaconDTO extends BeaconDefaultVO{
 	private int minor;
 	private int use;
 	private String note;
-	
 }

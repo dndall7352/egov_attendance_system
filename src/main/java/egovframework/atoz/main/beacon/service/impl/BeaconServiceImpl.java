@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import egovframework.atoz.main.beacon.service.BeaconDTO;
 import egovframework.atoz.main.beacon.service.BeaconDefaultVO;
 import egovframework.atoz.main.beacon.service.BeaconService;
+import egovframework.atoz.main.page.Criteria;
 
 @Service("beaconService")
 public class BeaconServiceImpl extends EgovAbstractServiceImpl implements BeaconService{
@@ -17,11 +18,15 @@ public class BeaconServiceImpl extends EgovAbstractServiceImpl implements Beacon
 	private BeaconDAO beaconDAO;
 	
 	@Override
-	public List<BeaconDTO> selectBeaconList(BeaconDefaultVO searchVO) throws Exception {
-		return beaconDAO.selectBeaconList(searchVO);
+	public List<BeaconDTO> selectBeaconList(Criteria cri) throws Exception {
+		return beaconDAO.selectBeaconList(cri);
 	}
 	@Override
-	public int selectBeaconListTotCnt(BeaconDefaultVO searchVO) throws Exception {
-		return beaconDAO.selectBeaconListTotCnt(searchVO);
+	public int selectBeaconListTotCnt(Criteria cri) throws Exception {
+		return beaconDAO.selectBeaconListTotCnt(cri);
+	}
+	@Override
+	public BeaconDTO selectBeacon(int beaconNumber) throws Exception {
+		return beaconDAO.selectBeacon(beaconNumber);
 	}
 }

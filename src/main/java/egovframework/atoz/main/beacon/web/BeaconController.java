@@ -7,16 +7,22 @@ import javax.annotation.Resource;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.atoz.main.authority.service.AuthorityDefaultVO;
 import egovframework.atoz.main.beacon.service.BeaconDTO;
 import egovframework.atoz.main.beacon.service.BeaconDefaultVO;
 import egovframework.atoz.main.beacon.service.BeaconService;
+import egovframework.atoz.main.page.Criteria;
+import egovframework.atoz.main.page.PageVO;
 
 @Controller
+@RequestMapping("/beacon")
 public class BeaconController {
 	
 	@Resource(name = "beaconService")
@@ -26,31 +32,30 @@ public class BeaconController {
     @Resource(name = "propertiesService")
     protected EgovPropertyService propertiesService;
 	
-	@RequestMapping("/beacon/beaconList.do")
-	public String beaconList(@ModelAttribute("searchVO") BeaconDefaultVO searchVO, 
-    		ModelMap model) throws Exception{
+    @RequestMapping("/beacon.do")
+    public String beacon(Model model)throws Exception{
+    	Criteria cri = new Criteria();
+    	return beaconList(cri, model);
+    }
+    
+	@RequestMapping("/beaconList.do")
+	public String beaconList(Criteria cri, Model model) throws Exception{
 		
-		/** EgovPropertyService.sample */
-    	searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
-    	searchVO.setPageSize(propertiesService.getInt("pageSize"));
-    	
-    	/** pageing */
-    	PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(searchVO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(searchVO.getPageUnit());
-		paginationInfo.setPageSize(searchVO.getPageSize());
-		
-		searchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-		searchVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		searchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		
-        List<BeaconDTO> beaconList = beaconService.selectBeaconList(searchVO);
-        model.addAttribute("resultList", beaconList);
-        
-        int totCnt = beaconService.selectBeaconListTotCnt(searchVO);
-		paginationInfo.setTotalRecordCount(totCnt);
-        model.addAttribute("paginationInfo", paginationInfo);
-		
+        List<BeaconDTO> beaconList = beaconService.selectBeaconList(cri);
+        int totalCnt = beaconService.selectBeaconListTotCnt(cri);
+        System.out.println(beaconList);
+        model.addAttribute("beaconList", beaconList);
+        model.addAttribute("pageVO", new PageVO(cri, totalCnt));
+
 		return "/beacon/beacon";
+	}
+	
+	@RequestMapping("/selectBeacon.do")
+	public String selectBeacon(@RequestParam int beaconNumber, Model model) throws Exception{
+		System.out.println("beacon detail number : " + beaconNumber);
+		BeaconDTO beaconDTO = beaconService.selectBeacon(beaconNumber);
+		
+		model.addAttribute("beaconDTO", beaconDTO);
+		return "/beacon/beacon_select";
 	}
 }

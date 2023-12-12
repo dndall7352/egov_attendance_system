@@ -16,7 +16,7 @@ public class BeaconDefaultVO {
     private int pageIndex = 1;
     
     /** 페이지갯수 */
-    private int pageUnit = 10;
+    private int pageUnit = 5;
     
     /** 페이지사이즈 */
     private int pageSize = 10;
@@ -25,10 +25,10 @@ public class BeaconDefaultVO {
     private int firstIndex = 1;
 
     /** lastIndex */
-    private int lastIndex = 1;
+    private int lastIndex = 10;
 
     /** recordCountPerPage */
-    private int recordCountPerPage = 10;
+    private int recordCountPerPage = 5;
     
         
 	public int getFirstIndex() {

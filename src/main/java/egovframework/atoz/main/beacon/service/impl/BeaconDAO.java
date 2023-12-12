@@ -8,18 +8,23 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.atoz.main.beacon.service.BeaconDTO;
 import egovframework.atoz.main.beacon.service.BeaconDefaultVO;
+import egovframework.atoz.main.page.Criteria;
 
 @Repository("beaconDAO")
 public class BeaconDAO {
 	@Autowired
 	SqlSession sqlSession;
 	
-	public List<BeaconDTO> selectBeaconList(BeaconDefaultVO searchVO) throws Exception{
+	public List<BeaconDTO> selectBeaconList(Criteria cri) throws Exception{
 		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
-		return mapper.selectBeaconList(searchVO);
+		return mapper.selectBeaconList(cri);
 	}
-	public int selectBeaconListTotCnt(BeaconDefaultVO searchVO) throws Exception{
+	public int selectBeaconListTotCnt(Criteria cri) throws Exception{
 		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
-		return mapper.selectBeaconListTotCnt(searchVO);
+		return mapper.selectBeaconListTotCnt(cri);
+	}
+	public BeaconDTO selectBeacon(int beaconNumber) throws Exception{
+		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
+		return mapper.selectBeacon(beaconNumber);
 	}
 }
