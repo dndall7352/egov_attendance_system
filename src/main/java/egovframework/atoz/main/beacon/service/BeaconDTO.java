@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BeaconDTO extends BeaconDefaultVO{
+public class BeaconDTO{
 	private int beacon_number;
 	private String uuid;
 	private String com_name;
@@ -15,5 +15,7 @@ public class BeaconDTO extends BeaconDefaultVO{
 	private int major;
 	private int minor;
 	private int use;
+	private String emplacement;
 	private String note;
+	
 }

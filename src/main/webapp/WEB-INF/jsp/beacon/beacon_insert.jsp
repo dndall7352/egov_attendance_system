@@ -36,60 +36,59 @@
   </div>
 </div>
 <form id="update-beacon-form" method="post" action="/beacon/updateBeacon.do">
-  <c:set var="beacon" value="${beaconDTO }"></c:set>
     <table class="table select-beacon-table" style="min-width: 100%; width: 100%;">
         <tr>
-            <td class="thead" style="width: 12%;">NO</td>
-            <td class="thead" id="detail-number" style="width: 35%;">${beacon.beacon_number }</td>
+            <td class="thead" style="width: 12%;"></td>
+            <td class="thead" id="detail-number" style="width: 35%;">신규 비콘 추가</td>
             <td rowspan="4" class="thead" style="width: 9%;">비콘<br>정보</td>
             <td class="thead" style="width: 9%;">UUID</td>
-            <td class="table-input" style="width: 35%;"><input type="text" class="table-input-text" name="uuid" value="${beacon.uuid }"></td>
+            <td class="table-input" style="width: 35%;"><input type="text" class="table-input-text" name="uuid" value=""></td>
         </tr>
         <tr>
             <td class="thead">회사명</td>
-            <td class="thead" id="cpn-com-name">${beacon.com_name }</td>
+            <td class="thead" id="cpn-com-name"></td>
             <td class="thead">Major</td>
-            <td class="table-input"><input type="text" class="table-input-text" name="major" value="${beacon.major }"></td>
+            <td class="table-input"><input type="text" class="table-input-text" name="major" value=""></td>
         </tr>
         <tr>
             <td class="thead">C.P.N</td>
             <td class="table-input">
             	<div style="display: flex; justify-content: space-between;">
-            		<input type="text" class="table-input-text" style="width:80%; justify-content: space-between;" name="com_number" value="${beacon.com_number }">
+            		<input type="text" class="table-input-text" style="width:80%; justify-content: space-between;" name="com_number" value="">
             		<button type="button" class="btn btn-success" id="cpn-search-btn">검색</button>
             	</div>
             </td>
             <td class="thead">Minor</td>
-            <td class="table-input"><input type="text" class="table-input-text" name="minor" value="${beacon.minor }"></td>
+            <td class="table-input"><input type="text" class="table-input-text" name="minor" value=""></td>
         </tr>
         <tr>
             <td class="thead">설치장소</td>
-            <td class="table-input"><input type="text" class="table-input-text" name="emplacement" value="${beacon.emplacement }"></td>
+            <td class="table-input"><input type="text" class="table-input-text" name="emplacement" value=""></td>
             <td class="thead">비콘상태</td>
             <td class="table-input">
                 <div id="beacon-state" style="display: flex; width: 100px; height: 40px; background-color: #5B9BD5; border-radius: 30px; align-items: center; justify-content: space-evenly; cursor: pointer; user-select:none;">
-                    <div data-state="1">정상</div>
+                    <div data-state="1" class="selected">정상</div>
                     <div data-state="0">중지</div>
                 </div>
             </td>
         </tr>
         <tr>
             <td class="thead" style="height: 120px;">참고 사항</td>
-            <td colspan="4" class="table-input" style="vertical-align: middle;"><input type="text" class="table-input-text" name="note" value="${beacon.note }"></td>
+            <td colspan="4" class="table-input" style="vertical-align: middle;"><input type="text" class="table-input-text" name="note" value=""></td>
         </tr>
     </table>
-    <button type="button" class="btn btn-success" id="update-beacon-btn" style="width: 100px; font-weight: 600; position: absolute; right: 30px;">저장</button>
+    <button type="button" class="btn btn-success" id="insert-beacon-btn" style="width: 100px; font-weight: 600; position: absolute; right: 30px;">저장</button>
  </form> 
 
  
     <script>
-    	$('#beacon-state').children('div[data-state="${beacon.use}"]').addClass('selected');
 
         $('#beacon-state').on('click', function(){
             $(this).find('div').each(function(){
                	$(this).toggleClass('selected');
             });
         });
+        
         $('#cpn-search-btn').on('click', function(){
         	let com_number = $(this).prev().val();
         	findComName(com_number);

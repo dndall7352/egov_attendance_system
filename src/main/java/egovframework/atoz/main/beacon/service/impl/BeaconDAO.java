@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import egovframework.atoz.main.beacon.service.BeaconDTO;
-import egovframework.atoz.main.beacon.service.BeaconDefaultVO;
 import egovframework.atoz.main.page.Criteria;
 
 @Repository("beaconDAO")
@@ -26,5 +25,13 @@ public class BeaconDAO {
 	public BeaconDTO selectBeacon(int beaconNumber) throws Exception{
 		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
 		return mapper.selectBeacon(beaconNumber);
+	}
+	public String searchComNumber(int com_number) throws Exception{
+		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
+		return mapper.searchComNumber(com_number);
+	}
+	public int updateBeacon(BeaconDTO dto) throws Exception{
+		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
+		return mapper.updateBeacon(dto);
 	}
 }

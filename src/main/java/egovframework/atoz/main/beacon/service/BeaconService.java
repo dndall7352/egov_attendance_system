@@ -8,5 +8,6 @@ public interface BeaconService {
 	List<BeaconDTO> selectBeaconList(Criteria cri) throws Exception;
 	int selectBeaconListTotCnt(Criteria cri) throws Exception;
 	BeaconDTO selectBeacon(int beaconNumber) throws Exception;
-	
+	String searchComNumber(int com_number) throws Exception;
+	int updateBeacon(BeaconDTO dto) throws Exception;
 }

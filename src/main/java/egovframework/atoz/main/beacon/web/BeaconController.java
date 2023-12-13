@@ -1,22 +1,27 @@
 package egovframework.atoz.main.beacon.web;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.atoz.main.authority.service.AuthorityDefaultVO;
 import egovframework.atoz.main.beacon.service.BeaconDTO;
-import egovframework.atoz.main.beacon.service.BeaconDefaultVO;
 import egovframework.atoz.main.beacon.service.BeaconService;
 import egovframework.atoz.main.page.Criteria;
 import egovframework.atoz.main.page.PageVO;
@@ -57,5 +62,31 @@ public class BeaconController {
 		
 		model.addAttribute("beaconDTO", beaconDTO);
 		return "/beacon/beacon_select";
+	}
+	
+	@PostMapping("/searchComNumber.do")
+	@ResponseBody
+	public ResponseEntity<?> searchConNumber(@RequestBody Map<String, Integer> reqMap) throws Exception{
+		int com_number = reqMap.get("com_number");
+		String com_name = beaconService.searchComNumber(com_number);
+
+		return ResponseEntity.ok(com_name);
+	}
+	
+	@PostMapping("/updateBeacon.do")
+	public String updateBeacon(@ModelAttribute BeaconDTO beaconDTO,@ModelAttribute Criteria cri, Model model) throws Exception{
+		System.out.println(beaconDTO);
+		System.out.println(cri);
+		
+		int cnt = beaconService.updateBeacon(beaconDTO);
+		if(cnt > 0) {
+			 return "redirect:/beacon/beaconList.do?pageNum=" + cri.getPageNum() + "&amount=" + cri.getAmount() + "&searchType=" + cri.getSearchType() + "&searchName=" + cri.getSearchName();
+		}
+		return null;
+	}
+	
+	@RequestMapping("/insertJspPage.do")
+	public String insertJspPage()throws Exception{
+		return "/beacon/beacon_insert";
 	}
 }

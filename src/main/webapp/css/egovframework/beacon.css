@@ -37,27 +37,27 @@ td[rowspan] {
     border: none; 
     background-color: #D8E2F3 ;
 }
-.col-1 {
+.col-001 {
     width: 5%;
 }
 
-.col-2 {
+.col-002 {
     width: 18%;
 }
 
-.col-3 {
+.col-003 {
     width: 35%;
 }
 
-.col-4 {
+.col-004 {
     width: 15%;
 }
 
-.col-5 {
+.col-005 {
     width: 5%;
 }
 
-.col-6 {
+.col-006 {
     width: 13%;
 }
 #beacon-state div{

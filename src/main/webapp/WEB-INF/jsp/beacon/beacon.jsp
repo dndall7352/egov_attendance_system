@@ -12,6 +12,7 @@
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
@@ -76,17 +77,17 @@
                 </button>
               </div>
         </div>
-        <button type="button" class="btn btn-success">+ 신규비콘</button>
+        <button type="button" class="btn btn-success" id="add-beacon-btn">+ 신규비콘</button>
     </div>
     <table class="table table-striped table-hover" style="text-align: center;">
         <thead>
             <tr>
-                <td rowspan="2" class="col-1">NO.</td>
-                <td rowspan="2" class="col-2">UUID</td>
-                <td colspan="2" class="col-3">사용처</td>
-                <td colspan="2" class="col-4">비콘 신호</td>
-                <td rowspan="2" class="col-5">비콘<br>상태</td>
-                <td rowspan="2" class="col-6">참고 사항</td>
+                <td rowspan="2" class="col-001">NO.</td>
+                <td rowspan="2" class="col-002">UUID</td>
+                <td colspan="2" class="col-003">사용처</td>
+                <td colspan="2" class="col-004">비콘 신호</td>
+                <td rowspan="2" class="col-005">비콘<br>상태</td>
+                <td rowspan="2" class="col-006">참고 사항</td>
 
             </tr>
             <tr>
@@ -152,7 +153,7 @@
     		window.location.href = '/beacon/beacon.do';
     	});
     	
-    	$('#button-addon2').on('click', function(){
+    	$('#button-addon2').on('click', function(){ // 검색 기능
     		let searchType = $('#searchType').val();
     		let searchName = $('#searchName').val();
     		if(searchName == null || searchName == ''){
@@ -167,7 +168,8 @@
     		}
     	});
     	
-    	$('#beaconPage .page-item').on('click', function(){
+    	
+    	$('#beaconPage .page-item').on('click', function(){ // 페이지 기능
     		let pageNum = $(this).find('.page-link').data('pagenum');
     		if(pageNum != ${pageVO.cri.pageNum}){
 	    		form.find('input[name="pageNum"]').val(pageNum);
@@ -176,8 +178,25 @@
     			return;
     		}
     	});
-    	
-        $('table').on('click', '.beacon-item', function() {
+		$('#add-beacon-btn').on('click', function(){ // 신규 비콘 추가
+			
+		if($(this).hasClass('onClicked')){
+			$('#detail-field').empty();
+			$(this).text('+ 신규비콘');
+		}else{
+			$(this).text('- 신규비콘');
+    		$.ajax({
+    			type:'get',
+    			url:'/beacon/insertJspPage.do',
+    			success:function(response){
+    				$('#detail-field').html(response);
+    			}
+    		});
+		}
+		$(this).toggleClass('onClicked');
+    	});
+		
+        $('table').on('click', '.beacon-item', function() { // 해당 비콘 상세 정보
             let beaconNumber = $(this).children('.beacon-number').text();
             if(!$('#detail-field').is(':empty') && $('.table.select-beacon-table #detail-number').text() == beaconNumber){
             	$('#detail-field').empty();
@@ -189,11 +208,49 @@
 	                success: function(response) {
 	                    // 서버에서 받은 HTML을 detail-field에 추가
 	                    $('#detail-field').html(response);
+	                    
 	                },
 	            });
             }
         });
+         $('#detail-field').on('click','#update-beacon-btn', function(){ // 상세 비콘 수정
+        	let com_number = $('input[name="com_number"]').val();
+			let emplacement = $('input[name="emplacement"]').val();
+			let uuid = $('input[name="uuid"]').val();
+			let major = $('input[name="major"]').val();
+			let minor = $('input[name="minor"]').val();
+			console.log(emplacement);
+			console.log(uuid);
+        	findComName(com_number);
+        	if($('#cpn-com-name').text() != "" && emplacement != "" && uuid != "" && major != "" && minor != ""){
+        		var addData = {
+        				beacon_number : $('#detail-number').text(),
+        				com_name : $('#cpn-com-name').text(),
+        				use : $('#beacon-state').find('.selected').data('state'),
+        				pageNum : ${pageVO.cri.pageNum},
+        				amount : ${pageVO.cri.amount},
+        				searchType : '${pageVO.cri.searchType}',
+        				searchName : '${pageVO.cri.searchName}'
+        		}
+        		$.each(addData, function(key, value){
+        			var appendInput = $("<input>").attr({
+            			type:"hidden",
+            			name:key,
+            			value: value
+            		});
+        			$('#update-beacon-form').append(appendInput);
+        		});
+        		
+        		$('#update-beacon-form').submit();
+        	}else{
+        		$('#beaconModal').find('.modal-body p').text('내용을 입력하세요');
+				$('#beaconModal').modal('show');
+        	}
+        });
+       
+        
     });
+    
     	
     </script>
 </body>

@@ -2,18 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="egovframework.atoz.main.beacon.service.impl.BeaconMapper">
 	<select id="selectBeaconList" resultType="egovMap">
-		<!-- select bc.beacon_number, bc.uuid, com.com_name, com.com_number, bc.major, bc.minor, bc.use, bc.note
-		from beacon_info bc, company_info com, department_info dep
-		where bc.dep_number = dep.dep_number
-		and dep.com_number = com.com_number -->
-		
 		SELECT *
 		 FROM (
 			SELECT A.*, ROWNUM RNUM 
 			FROM (
 				SELECT
 					bc.beacon_number, bc.uuid, com.com_name, com.com_number, bc.major, bc.minor, bc.use, bc.note
-				FROM beacon_info bc, company_info com, department_info dep
+				FROM beacon_info bc, company_info com
 				where
 			<if test="searchName != null">
 				<choose>
@@ -28,8 +23,7 @@
 				</choose>
 			</if>
 					
-				and bc.dep_number = dep.dep_number
-				and dep.com_number = com.com_number
+				and bc.com_number = com.com_number
 				ORDER BY bc.beacon_number DESC
 		
 	<![CDATA[					
@@ -40,7 +34,7 @@
 	
 	<select id="selectBeaconListTotCnt" resultType="int">
 		SELECT COUNT(*)
-			FROM beacon_info bc, company_info com, department_info dep
+			FROM beacon_info bc, company_info com
 			where
 			<choose>
 				<when test="searchType == 'uuid'">bc.uuid like '%' || #{searchName} || '%'</when>
@@ -52,8 +46,7 @@
 					or bc.note like '%' || #{searchName} || '%')
 					</otherwise>
 			</choose>
-			and bc.dep_number = dep.dep_number
-			and dep.com_number = com.com_number
+			and bc.com_number = com.com_number
 			<!-- <if test="searchKeyword != null and searchKeyword != ''">
 				<if test="searchCondition == 0">AND
 					COM_NUMBER = #{searchKeyword}
@@ -66,11 +59,29 @@
 	
 	<select id="selectBeacon" resultType="egovframework.atoz.main.beacon.service.BeaconDTO">
 		SELECT
-						bc.beacon_number, bc.uuid, com.com_name, com.com_number, bc.major, bc.minor, bc.use, bc.note
-						FROM beacon_info bc, company_info com, department_info dep
+						bc.beacon_number, bc.uuid, com.com_name, com.com_number, bc.major, bc.minor, bc.use, bc.emplacement, bc.note
+						FROM beacon_info bc, company_info com
 				WHERE 1=1
-				and bc.dep_number = dep.dep_number
-				and dep.com_number = com.com_number
+				and bc.com_number = com.com_number
 				and bc.beacon_number = #{beacon_number}
 	</select>
+	
+	<select id="searchComNumber" resultType="String">
+		select com_name
+		from company_info
+		where com_number = #{com_number}
+	</select>
+	
+	<update id="updateBeacon">
+		update beacon_info
+		set uuid = #{uuid},
+			com_number = #{com_number},
+			use = #{use},
+			major = #{major},
+			minor = #{minor},
+			emplacement = #{emplacement}
+			,note = #{note}
+
+		where beacon_number = #{beacon_number}
+	</update>
 </mapper>
