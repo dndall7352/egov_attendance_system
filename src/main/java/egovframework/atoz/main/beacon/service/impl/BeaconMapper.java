@@ -14,4 +14,6 @@ public interface BeaconMapper {
 	BeaconDTO selectBeacon(int beaconNumber) throws Exception;
 	String searchComNumber(int com_number) throws Exception;
 	int updateBeacon(BeaconDTO dto) throws Exception;
+	int insertBeacon(BeaconDTO dto) throws Exception;
+	List<BeaconDTO> printBeacon(Criteria cri) throws Exception;
 }

@@ -89,4 +89,21 @@ public class BeaconController {
 	public String insertJspPage()throws Exception{
 		return "/beacon/beacon_insert";
 	}
+	
+	@RequestMapping("/insertBeacon.do")
+	public String insertBeacon(@ModelAttribute BeaconDTO beaconDTO) throws Exception{
+		int cnt = beaconService.insertBeacon(beaconDTO);
+		if(cnt > 0) {
+			return "redirect:/beacon/beaconList.do";
+		}
+		return null;
+	}
+	
+	@RequestMapping("/printBeacon.do")
+	public String printBeacon(Criteria cri, Model model)throws Exception{
+		List<BeaconDTO> beaconList = beaconService.printBeacon(cri);
+		model.addAttribute("beaconList", beaconList);
+		model.addAttribute("cri", cri);
+		return "/beacon/beacon_print";
+	}
 }

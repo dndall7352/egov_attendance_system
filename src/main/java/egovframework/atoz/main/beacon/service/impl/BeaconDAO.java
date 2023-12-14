@@ -34,4 +34,12 @@ public class BeaconDAO {
 		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
 		return mapper.updateBeacon(dto);
 	}
+	public int insertBeacon(BeaconDTO dto) throws Exception{
+		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
+		return mapper.insertBeacon(dto);
+	}
+	public List<BeaconDTO> printBeacon(Criteria cri) throws Exception{
+		BeaconMapper mapper = sqlSession.getMapper(BeaconMapper.class);
+		return mapper.printBeacon(cri);
+	}
 }

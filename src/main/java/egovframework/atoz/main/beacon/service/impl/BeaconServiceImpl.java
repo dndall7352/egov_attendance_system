@@ -36,4 +36,12 @@ public class BeaconServiceImpl extends EgovAbstractServiceImpl implements Beacon
 	public int updateBeacon(BeaconDTO dto) throws Exception {
 		return beaconDAO.updateBeacon(dto);
 	}
+	@Override
+	public int insertBeacon(BeaconDTO dto) throws Exception {
+		return beaconDAO.insertBeacon(dto);
+	}
+	@Override
+	public List<BeaconDTO> printBeacon(Criteria cri) throws Exception {
+		return beaconDAO.printBeacon(cri);
+	}
 }

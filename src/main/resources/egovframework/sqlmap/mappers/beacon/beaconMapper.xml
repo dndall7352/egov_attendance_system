@@ -84,4 +84,37 @@
 
 		where beacon_number = #{beacon_number}
 	</update>
+	
+	<insert id="insertBeacon">
+		insert into beacon_info(beacon_number, com_number, uuid, major, minor, use, emplacement, note)
+		values(beacon_num_seq.nextval, #{com_number}, #{uuid}, #{major}, #{minor}, #{use}, #{emplacement}, #{note})
+	</insert>
+	
+	<select id="printBeacon" resultType="egovMap">
+		SELECT *
+		 FROM (
+			SELECT A.*, ROWNUM RNUM 
+			FROM (
+				SELECT
+					bc.beacon_number, bc.uuid, com.com_name, com.com_number, bc.major, bc.minor, bc.use, bc.emplacement, bc.note
+				FROM beacon_info bc, company_info com
+				where
+			<if test="searchName != null">
+				<choose>
+					<when test="searchType == 'uuid'">bc.uuid like '%' || #{searchName} || '%'</when>
+					<when test="searchType == 'com_name'">com.com_name like '%' || #{searchName} || '%'</when>
+					<when test="searchType == 'note'">bc.note like '%' || #{searchName} || '%'</when>
+					<otherwise>
+						(bc.uuid like '%' || #{searchName} || '%'
+					or com.com_name like '%' || #{searchName} || '%'
+					or bc.note like '%' || #{searchName} || '%')
+					</otherwise>
+				</choose>
+			</if>
+					
+				and bc.com_number = com.com_number
+				ORDER BY bc.beacon_number DESC				
+			) A 
+		)
+	</select>
 </mapper>

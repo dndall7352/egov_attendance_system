@@ -26,13 +26,13 @@
     <div style="display: flex; justify-content: space-between; align-items: baseline;">
         <div style="display: flex; align-items: baseline;">
             <select class="form-select" id="searchType" aria-label="Default select example" style="width: 150px; margin-right: 10px;">
-                <option value="all" ${pageVO.cri.searchType == 'all'? 'selected' : '' }>전체</option>
-                <option value="uuid" ${pageVO.cri.searchType == 'uuid'? 'selected' : '' }>UUID</option>
-                <option value="com_name" ${pageVO.cri.searchType == 'com_name'? 'selected' : '' }>회사명</option>
-                <option value="note" ${pageVO.cri.searchType == 'note'? 'selected' : '' }>참고 사항</option>
+                <option value="all" ${cri.searchType == 'all'? 'selected' : '' }>전체</option>
+                <option value="uuid" ${cri.searchType == 'uuid'? 'selected' : '' }>UUID</option>
+                <option value="com_name" ${cri.searchType == 'com_name'? 'selected' : '' }>회사명</option>
+                <option value="note" ${cri.searchType == 'note'? 'selected' : '' }>참고 사항</option>
             </select>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" id="searchName" style="text-align: center;" placeholder="검색어를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2" value="${pageVO.cri.searchName }">
+                <input type="text" class="form-control" id="searchName" style="text-align: center;" placeholder="검색어를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2" value="${cri.searchName }">
                 <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="display: flex; align-items: center;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
                     viewBox="0 0 16 16">
@@ -42,17 +42,22 @@
                 </button>
               </div>
         </div>
-        <button type="button" class="btn btn-success" id="add-beacon-btn">+ 신규비콘</button>
+        <button type="button" class="btn btn-success" id="add-beacon-btn">🖨 인쇄</button>
     </div>
-    <table class="table table-striped table-hover" style="text-align: center;">
-        <thead id="list-table-head">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+    	<h2>비콘 목록</h2>
+    	<span id="today"></span>
+    </div>
+    <table class="table print-table" style="text-align: center;">
+        <thead class="table-secondary" id="print-table-head">
             <tr>
-                <td rowspan="2" class="col-001">NO.</td>
-                <td rowspan="2" class="col-002">UUID</td>
-                <td colspan="2" class="col-003">사용처</td>
-                <td colspan="2" class="col-004">비콘 신호</td>
-                <td rowspan="2" class="col-005">비콘<br>상태</td>
-                <td rowspan="2" class="col-006">참고 사항</td>
+                <td rowspan="2" style="width: 4%;">NO.</td>
+                <td rowspan="2" style="width: 16%;">UUID</td>
+                <td colspan="2" style="width: 29%;">사용처</td>
+                <td colspan="2" style="width: 15%;">비콘 신호</td>
+                <td rowspan="2" style="width: 15%;">설치 장소</td>
+                <td rowspan="2" style="width: 5%;">비콘<br>상태</td>
+                <td rowspan="2" style="width: 16%;">참고 사항</td>
 
             </tr>
             <tr>
@@ -65,13 +70,14 @@
         <tbody>
         
         <c:forEach var="beacon" items="${beaconList }">
-        	<tr class="beacon-item">
+        	<tr>
                 <td class="beacon-number">${beacon.beaconNumber }</td>
                 <td>${beacon.uuid }</td>
                 <td>${beacon.comName }</td>
                 <td>${beacon.comNumber }</td>
                 <td>${beacon.major }</td>
                 <td>${beacon.minor }</td>
+                <td>${beacon.emplacement }</td>
                 <td>
                 <c:choose>
                  <c:when test="${beacon.use == 1 }">정상</c:when>
@@ -85,38 +91,57 @@
         </tbody>
     </table>
     <br>
-    <div>
-		<nav aria-label="Page navigation example" id="beaconPage">
-		  <ul class="pagination justify-content-center">
-		  	<c:if test="${pageVO.prev }">
-			    <li class="page-item"><a class="page-link" href="#" data-pagenum='${pageVO.startPage - 1 }'>이전</a></li>
-			</c:if>
-			<c:forEach var="num" begin="${pageVO.startPage }" end="${pageVO.endPage }">
-			    <li class="page-item "><a class="page-link ${pageVO.cri.pageNum eq num ? 'active' : ''}" href="#" data-pagenum="${num }">${num }</a></li>
-			</c:forEach>
-			<c:if test="${pageVO.next }">
-			    <li class="page-item"><a class="page-link" href="#" data-pagenum='${pageVO.endPage + 1 }'>다음</a></li>
-			</c:if>
-		  </ul>
-		</nav>
-</div>
-	<form action="/beacon/beaconList.do" method="get" name="searchPage">
-		<input type="hidden" name="pageNum" value="1">
-		<input type="hidden" name="amount" value="${pageVO.cri.amount }">
+   
+	<form action="/beacon/printBeacon.do" method="get" name="searchPage">
 		<input type="hidden" name="searchType" value="${pageVO.cri.searchType }">
 		<input type="hidden" name="searchName" value="${pageVO.cri.searchName }">
 	</form>
 
-    <hr style="border: 1px #4472C4 solid; margin-bottom: 20px 0;">
-    <div id="detail-field"></div>
-    
-    
     <script type="text/javascript">
-	    let pageVO_pageNum = ${pageVO.cri.pageNum};
-	    let pageVO_amount = ${pageVO.cri.amount};
-	    let pageVO_searchType = '${pageVO.cri.searchType}';
-	    let pageVO_searchName = '${pageVO.cri.searchName}';
+    
+    $(function(){
+    	// let pageVO_pageNum = ${pageVO.cri.pageNum};
+ 	  //  let pageVO_amount = ${pageVO.cri.amount};
+ 	  //  let pageVO_searchType = '${pageVO.cri.searchType}';
+ 	  //  let pageVO_searchName = '${pageVO.cri.searchName}';
+ 	    
+ 	    let today = new Date();   
+
+ 	    let year = today.getFullYear();
+ 	    let month = today.getMonth() + 1;
+ 	    let date = today.getDate(); 
+ 	    let day = today.getDay(); 
+ 	    $('#today').text(year + '/' + month + '/' + date);
+ 	    
+ 	   $.ajax({
+ 			url:"/systemAdmin/getHeader.do",
+ 			type: 'get',
+ 			data:{pageName:"beacon"},
+ 			success:function(response){
+ 				$('#header').html(response);
+ 			}
+ 		});
+ 		
+ 		const form = $('form[name="searchPage"]');
+ 		
+ 		$('#button-addon2').on('click', function(){ // 검색 기능
+ 			let searchType = $('#searchType').val();
+ 			let searchName = $('#searchName').val();
+ 			if(searchName == null || searchName == ''){
+ 				$('#searchName').addClass('null-check');
+ 				setTimeout(function(){
+ 					$('#searchName').removeClass('null-check');
+ 				}, 2000);
+ 			}else{
+ 	    		form.find('input[name="searchType"]').val(searchType);
+ 	    		form.find('input[name="searchName"]').val(searchName);
+ 	    		form.submit();
+ 			}
+ 		});
+    });
+	   
+    
     </script>
-    <script type="text/javascript" src="<c:url value='/js/beacon.js'/>"></script>
+    <%-- <script type="text/javascript" src="<c:url value='/js/beacon.js'/>"></script> --%>
 </body>
 </html>

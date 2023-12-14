@@ -67,7 +67,7 @@
             <td class="table-input"><input type="text" class="table-input-text" name="emplacement" value="${beacon.emplacement }"></td>
             <td class="thead">비콘상태</td>
             <td class="table-input">
-                <div id="beacon-state" style="display: flex; width: 100px; height: 40px; background-color: #5B9BD5; border-radius: 30px; align-items: center; justify-content: space-evenly; cursor: pointer; user-select:none;">
+                <div id="beacon-state">
                     <div data-state="1">정상</div>
                     <div data-state="0">중지</div>
                 </div>
@@ -75,33 +75,40 @@
         </tr>
         <tr>
             <td class="thead" style="height: 120px;">참고 사항</td>
-            <td colspan="4" class="table-input" style="vertical-align: middle;"><input type="text" class="table-input-text" name="note" value="${beacon.note }"></td>
+            <td colspan="4" class="table-input" style="vertical-align: middle;"><textarea name="note" >${beacon.note }</textarea></td>
         </tr>
     </table>
-    <button type="button" class="btn btn-success" id="update-beacon-btn" style="width: 100px; font-weight: 600; position: absolute; right: 30px;">저장</button>
+    <button type="button" class="btn btn-success" id="update-beacon-btn">저장</button>
  </form> 
 
  
     <script>
     	$('#beacon-state').children('div[data-state="${beacon.use}"]').addClass('selected');
 
-        $('#beacon-state').on('click', function(){
+        $('#beacon-state').on('click', function(){ // 상태 체크
             $(this).find('div').each(function(){
                	$(this).toggleClass('selected');
             });
         });
-        $('#cpn-search-btn').on('click', function(){
+        $('#cpn-search-btn').on('click', function(e){ // c.p.n 검색 기능
+        	e.preventDefault();
         	let com_number = $(this).prev().val();
-        	findComName(com_number);
+        	if(com_number != ''){
+        		findComName(com_number);
+        	}else{
+        		$('#cpn-com-name').text('');
+        		$('#beaconModal').find('.modal-body p').text('일치하는 회사가 없습니다.');
+				$('#beaconModal').modal('show');
+        	}
         	
         });
-        $('input[name="com_number"]').on('input', function(){
+        $('input[name="com_number"]').on('input', function(){ // c.p.n 데이터 타입
         	let inputVal = $(this).val();
         	inputVal = inputVal.replace(/[^0-9]/g, '');
         	$(this).val(inputVal);
         });
         
-        function findComName(com_number){
+        function findComName(com_number){ // 일치 여부 함수
         	$.ajax({
         		url:'/beacon/searchComNumber.do',
         		method:'POST',
@@ -109,7 +116,6 @@
         		contentType: 'application/json',
         		success: function(response){
         			if(response == ''){
-        				console.log('asdfadsf');
         				$('#cpn-search-btn').prev().val('');
         				$('#cpn-com-name').text('');
         				$('#beaconModal').find('.modal-body p').text('일치하는 회사가 없습니다.');
