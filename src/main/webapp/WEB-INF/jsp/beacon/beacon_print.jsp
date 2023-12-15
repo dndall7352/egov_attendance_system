@@ -18,18 +18,34 @@
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
 <link type="text/css" rel="stylesheet" href="<c:url value='/css/egovframework/beacon.css'/>"/>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<style type="text/css">
+#printableArea table{
 
+}
+#printableArea table td {
+      border: 1px solid #000;
+      padding: 8px;
+}
+#printableArea .thead-print{
+background-color: #e2e3e5;
+}
+</style>
 </head>
 
 <body style="padding: 20px;">
-    <div id="header"></div>
-    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+    <div id="header" class="no-print"></div>
+    <div id="data-space">
+    <div style="display: flex; justify-content: space-between; align-items: baseline;" class="no-print">
         <div style="display: flex; align-items: baseline;">
             <select class="form-select" id="searchType" aria-label="Default select example" style="width: 150px; margin-right: 10px;">
                 <option value="all" ${cri.searchType == 'all'? 'selected' : '' }>전체</option>
                 <option value="uuid" ${cri.searchType == 'uuid'? 'selected' : '' }>UUID</option>
                 <option value="com_name" ${cri.searchType == 'com_name'? 'selected' : '' }>회사명</option>
                 <option value="note" ${cri.searchType == 'note'? 'selected' : '' }>참고 사항</option>
+                <option value="major"
+						${cri.searchType == 'major'? 'selected' : '' }>Major</option>
+					<option value="minor"
+						${cri.searchType == 'minor'? 'selected' : '' }>Minor</option>
             </select>
             <div class="input-group mb-3">
                 <input type="text" class="form-control" id="searchName" style="text-align: center;" placeholder="검색어를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2" value="${cri.searchName }">
@@ -42,8 +58,9 @@
                 </button>
               </div>
         </div>
-        <button type="button" class="btn btn-success" id="add-beacon-btn">🖨 인쇄</button>
+        <button type="button" class="btn btn-success" id="print-btn">🖨 인쇄</button>
     </div>
+    <%-- <div class="no-print">
     <div style="display: flex; align-items: center; justify-content: space-between;">
     	<h2>비콘 목록</h2>
     	<span id="today"></span>
@@ -90,12 +107,43 @@
            
         </tbody>
     </table>
+    </div> --%>
     <br>
-   
+   	<div id="printableArea" style="width:210mm; height:297mm; ">
+   	<div>
+        <table class="table"
+                style="text-align: center; width: 100%; height:100%; font-size: 13px; border: 1px solid black; ">
+                    <tr>
+                        <td style="width: 5%; border-right : 1px solid black; background-color: #e2e3e5;" class="thead-print">NO.</td>
+                        <td style="width: 15%; background-color: #e2e3e5;" class="thead-print">회사명</td>
+                        <td style="width: 25%;">(주)에이투지시스템</td>
+                        <td style="width: 15%; background-color: #e2e3e5;" class="thead-print">Major</td>
+                        <td style="width: 10%;">12345</td>
+                        <td class="thead-print">참고 사항</td>
+                    </tr>
+                    <tr>
+                        <td>50</td>
+                        <td class="thead-print">cpn</td>
+                        <td>1232561556</td>
+                        <td class="thead-print">minor</td>
+                        <td>55555</td>
+                        <td rowspan="2">참고사항입니다</tD>
+                    </tr>
+                    <tr>
+                        <td class="thead-print">UUID</td>
+                        <td colspan="2" style="font-size: 11px;">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</td>
+                        <td class="thead-print">비콘상태</td>
+                        <td>정상</td>
+                    </tr>
+            </table>
+    </div>
+    </div>
 	<form action="/beacon/printBeacon.do" method="get" name="searchPage">
 		<input type="hidden" name="searchType" value="${pageVO.cri.searchType }">
 		<input type="hidden" name="searchName" value="${pageVO.cri.searchName }">
 	</form>
+	
+</div>
 
     <script type="text/javascript">
     
@@ -138,6 +186,15 @@
  	    		form.submit();
  			}
  		});
+ 		
+ 		$('#print-btn').on('click',function(){
+ 			var printContents = $("#printableArea").html();
+ 		    var originalContents = $("body").html();
+ 		    
+ 		   $("body").html(printContents);
+ 	      window.print();
+ 	      $("body").html(originalContents);
+ 		})
     });
 	   
     

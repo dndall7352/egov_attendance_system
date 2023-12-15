@@ -1,10 +1,13 @@
 *{
     font-family: 'Nanum Gothic';
+   
 }
+
 table.table-striped.table-hover td, .table td {
     border: 1px solid #fff;
     text-align: center;
 }
+
 table.table.table-striped.table-hover tbody tr{
     height: 45px;
 }
@@ -20,6 +23,7 @@ table.table.table-striped.table-hover tbody tr{
     font-weight: 600;
     font-style: italic;
 } 
+
 .thead{
     background-color: #4472C4 !important;
     color: #fff !important;
@@ -97,14 +101,10 @@ textarea[name="note"] {
 #insert-beacon-btn{
 	width: 100px; 
 	font-weight: 600; 
-	position: absolute; 
-	right: 30px;
 }
 #update-beacon-btn{
 	width: 100px; 
 	font-weight: 600; 
-	position: absolute; 
-	right: 30px;
 }
 #beacon-state{
 	display: flex; 
@@ -129,4 +129,25 @@ color: var(--bs-body-color);
    border-color: #df203640;
    outline: 0;
    box-shadow: 0 0 0 0.25rem #df203640;
-   }
+}
+.company-item{
+	cursor: pointer;
+	user-select: none;
+}
+@media print{
+	.no-print{
+		visibility: hidden;
+	}
+	
+	
+	#printableArea table td {
+	
+      border: 1px solid #000;
+      padding: 8px;
+       -webkit-print-color-adjust:exact;
+}
+#printableArea .thead-print{
+background-color: #e2e3e5;
+ -webkit-print-color-adjust:exact;
+} 
+}

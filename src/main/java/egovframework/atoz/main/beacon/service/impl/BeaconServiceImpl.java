@@ -1,6 +1,7 @@
 package egovframework.atoz.main.beacon.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.atoz.main.beacon.service.BeaconDTO;
 import egovframework.atoz.main.beacon.service.BeaconService;
+import egovframework.atoz.main.beacon.service.SearchCompanyDTO;
 import egovframework.atoz.main.page.Criteria;
 
 @Service("beaconService")
@@ -29,8 +31,8 @@ public class BeaconServiceImpl extends EgovAbstractServiceImpl implements Beacon
 		return beaconDAO.selectBeacon(beaconNumber);
 	}
 	@Override
-	public String searchComNumber(int com_number) throws Exception {
-		return beaconDAO.searchComNumber(com_number);
+	public List<SearchCompanyDTO> searchCompany(Map<String, String> searchData) throws Exception {
+		return beaconDAO.searchCompany(searchData);
 	}
 	@Override
 	public int updateBeacon(BeaconDTO dto) throws Exception {
@@ -44,4 +46,9 @@ public class BeaconServiceImpl extends EgovAbstractServiceImpl implements Beacon
 	public List<BeaconDTO> printBeacon(Criteria cri) throws Exception {
 		return beaconDAO.printBeacon(cri);
 	}
+	@Override
+	public List<SearchCompanyDTO> searchCompanyList() throws Exception {
+		return beaconDAO.searchCompanyList();
+	}
+
 }

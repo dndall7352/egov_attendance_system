@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 
 	<ul style="display: flex;align-items: center;justify-content: space-between;">
+	<div>
+	<img src="/resources/images/ae41a6b8-4b39-44e9-d227-6f5e74a3959d.png" alt="" style="width: 100px; margin-right: 20px;">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <div class="btn-group" role="group"">
                 <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-page-name="company">
@@ -58,6 +60,7 @@
                   <li><a class="dropdown-item" href="#">DB 관리 내용 목록 인쇄</a></li>
                 </ul>
             </div>
+        </div>
         </div>
         <div>
             <p style="font-size: 20px; margin-top: auto; margin-bottom: auto; float: left; margin-right: 50px;">로그인 사용자</p>

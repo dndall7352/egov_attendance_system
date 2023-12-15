@@ -8,11 +8,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HeaderController {
 	
-	@RequestMapping("systemAdmin/getHeader.do")
-	public String getHeader(@RequestParam String pageName, Model model)throws Exception{
+	@RequestMapping("/systemAdmin/getHeader.do")
+	public String sysGetHeader(@RequestParam String pageName, Model model)throws Exception{
 		System.out.println(pageName);
 		model.addAttribute("pageName", pageName);
 		
-		return "system_admin_header";
+		return "/header/system_admin_header";
+	}
+	
+	@RequestMapping("/companyAdmin/getHeader.do")
+	public String comGetHeader(@RequestParam String pageName, Model model) throws Exception{
+		model.addAttribute("pageName", pageName);
+		return "/header/company_admin_header";
 	}
 }

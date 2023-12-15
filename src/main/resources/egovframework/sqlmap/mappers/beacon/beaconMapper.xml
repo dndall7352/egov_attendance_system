@@ -15,10 +15,14 @@
 					<when test="searchType == 'uuid'">bc.uuid like '%' || #{searchName} || '%'</when>
 					<when test="searchType == 'com_name'">com.com_name like '%' || #{searchName} || '%'</when>
 					<when test="searchType == 'note'">bc.note like '%' || #{searchName} || '%'</when>
+					<when test="searchType == 'major'">to_char(bc.major) like '%' || #{searchName} || '%'</when>
+					<when test="searchType == 'minor'">to_char(bc.minor) like '%' || #{searchName} || '%'</when>
 					<otherwise>
 						(bc.uuid like '%' || #{searchName} || '%'
 					or com.com_name like '%' || #{searchName} || '%'
-					or bc.note like '%' || #{searchName} || '%')
+					or bc.note like '%' || #{searchName} || '%'
+					or to_char(bc.major) like '%' || #{searchName} || '%'
+					or to_char(bc.minor) like '%' || #{searchName} || '%')
 					</otherwise>
 				</choose>
 			</if>
@@ -40,10 +44,14 @@
 				<when test="searchType == 'uuid'">bc.uuid like '%' || #{searchName} || '%'</when>
 				<when test="searchType == 'com_name'">com.com_name like '%' || #{searchName} || '%'</when>
 				<when test="searchType == 'note'">bc.note like '%' || #{searchName} || '%'</when>
+				<when test="searchType == 'major'">to_char(bc.major) like '%' || #{searchName} || '%'</when>
+					<when test="searchType == 'minor'">to_char(bc.minor) like '%' || #{searchName} || '%'</when>
 				<otherwise>
 						(bc.uuid like '%' || #{searchName} || '%'
 					or com.com_name like '%' || #{searchName} || '%'
-					or bc.note like '%' || #{searchName} || '%')
+					or bc.note like '%' || #{searchName} || '%'
+					or to_char(bc.major) like '%' || #{searchName} || '%'
+					or to_char(bc.minor) like '%' || #{searchName} || '%')
 					</otherwise>
 			</choose>
 			and bc.com_number = com.com_number
@@ -66,10 +74,18 @@
 				and bc.beacon_number = #{beacon_number}
 	</select>
 	
-	<select id="searchComNumber" resultType="String">
-		select com_name
+	<select id="searchCompany" resultType="egovMap">
+		select com_name, com_number
 		from company_info
-		where com_number = #{com_number}
+		where
+		<choose>
+			<when test="searchType == 'com_number'">
+				to_char(com_number) like '%' || #{searchText} || '%'
+			</when>
+			<when test="searchType == 'com_name'">
+				com_name like '%' || #{searchText} || '%'
+			</when>
+		</choose>
 	</select>
 	
 	<update id="updateBeacon">
@@ -101,20 +117,29 @@
 				where
 			<if test="searchName != null">
 				<choose>
-					<when test="searchType == 'uuid'">bc.uuid like '%' || #{searchName} || '%'</when>
-					<when test="searchType == 'com_name'">com.com_name like '%' || #{searchName} || '%'</when>
-					<when test="searchType == 'note'">bc.note like '%' || #{searchName} || '%'</when>
-					<otherwise>
+				<when test="searchType == 'uuid'">bc.uuid like '%' || #{searchName} || '%'</when>
+				<when test="searchType == 'com_name'">com.com_name like '%' || #{searchName} || '%'</when>
+				<when test="searchType == 'note'">bc.note like '%' || #{searchName} || '%'</when>
+				<when test="searchType == 'major'">to_char(bc.major) like '%' || #{searchName} || '%'</when>
+					<when test="searchType == 'minor'">to_char(bc.minor) like '%' || #{searchName} || '%'</when>
+				<otherwise>
 						(bc.uuid like '%' || #{searchName} || '%'
 					or com.com_name like '%' || #{searchName} || '%'
-					or bc.note like '%' || #{searchName} || '%')
+					or bc.note like '%' || #{searchName} || '%'
+					or to_char(bc.major) like '%' || #{searchName} || '%'
+					or to_char(bc.minor) like '%' || #{searchName} || '%')
 					</otherwise>
-				</choose>
+			</choose>
 			</if>
 					
 				and bc.com_number = com.com_number
 				ORDER BY bc.beacon_number DESC				
 			) A 
 		)
+	</select>
+	
+	<select id="searchCompanyList" resultType="egovMap">
+		select com_number, com_name
+		from company_info
 	</select>
 </mapper>
