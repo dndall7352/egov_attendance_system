@@ -31,7 +31,6 @@
       <div class="modal-body" style="min-height: 100px;">
         <div class="input-group mb-3">
 		  <select class="form-select" id="category">
-		    <option value="select" selected hidden>선택</option>
 		    <option value="com_name">회사명</option>
 		    <option value="com_number">C.P.N</option>
 		  </select>
@@ -75,16 +74,16 @@
         </tr>
         <tr>
             <td class="thead">회사명</td>
-            <td class="thead" id="cpn-com-name">${beacon.com_name }</td>
+            <td id="cpn-com-name" style="background-color: #B0C3E6; text-align: left; cursor: default;">${beacon.com_name }</td>
             <td class="thead">Major</td>
             <td class="table-input"><input type="text" class="table-input-text beacon-code" maxlength="5" name="major" value="${beacon.major }"></td>
         </tr>
         <tr>
             <td class="thead">C.P.N</td>
-            <td class="table-input">
+            <td class="table-input" style="background-color: #B0C3E6">
             	<div style="display: flex; justify-content: space-between;">
-            		<input type="text" class="table-input-text" readonly="readonly" style="width:80%; justify-content: space-between;" name="com_number" value="${beacon.com_number }">
-            		<button type="button" class="btn btn-success" id="cpn-search-btn">검색</button>
+            		<input type="text" class="table-input-text" readonly="readonly" style="width:80%; justify-content: space-between; background-color: #B0C3E6; cursor: default;" name="com_number" value="${beacon.com_number }">
+            		<button type="button" class="btn btn-success" id="cpn-search-btn" style="height: 30px; display: flex; align-items: center;">검색</button>
             	</div>
             </td>
             <td class="thead">Minor</td>

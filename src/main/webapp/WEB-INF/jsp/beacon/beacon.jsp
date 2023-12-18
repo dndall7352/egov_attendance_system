@@ -30,7 +30,7 @@
 
 </head>
 
-<body style="padding: 20px; font-size: 15px;">
+<body style="padding: 20px; font-size: 14px;">
 	<div id="header"></div>
 	<div id="data-space" style="padding-left: 5%; padding-right: 5%;">
 		<div
@@ -66,6 +66,11 @@
 								d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                 </svg>
 					</button>
+ 					<div style="display: flex; align-items: flex-end; margin-left: 10px; font-size: 20px;">
+						<b>검색결과&nbsp;</b>
+						<span style="color: red;">${cnt}</span>
+						<span>건</span>
+					</div>
 				</div>
 			</div>
 			<button type="button" class="btn btn-success" id="add-beacon-btn">+

@@ -49,6 +49,7 @@ public class BeaconController {
         model.addAttribute("beaconList", beaconList);
         model.addAttribute("pageVO", new PageVO(cri, totalCnt));
         model.addAttribute("beacon_number", beacon_number);
+        model.addAttribute("cnt", totalCnt);
 		return "/beacon/beacon";
 	}
 	
@@ -112,6 +113,7 @@ public class BeaconController {
 		List<BeaconDTO> beaconList = beaconService.printBeacon(cri);
 		model.addAttribute("beaconList", beaconList);
 		model.addAttribute("cri", cri);
+		model.addAttribute("cnt", beaconList.size());
 		return "/beacon/beacon_print";
 	}
 	

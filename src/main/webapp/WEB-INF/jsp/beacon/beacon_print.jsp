@@ -3,13 +3,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>AtoZSystem</title>
+    <link rel="icon" href="/resources/images/atoz_logo_icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -19,12 +21,41 @@
 <link type="text/css" rel="stylesheet" href="<c:url value='/css/egovframework/beacon.css'/>"/>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style type="text/css">
-#printableArea table{
-
+@media print{
+	html, body { -webkit-print-color-adjust:exact; width: 210mm; height: 297mm; }
+    table { page-break-inside:auto; }
+    tr    { page-break-inside:avoid; page-break-after:auto; }
+    thead { display:table-header-group; }
+    tfoot { display:table-footer-group; }
+	.no-print{
+		visibility: hidden;
+	}
+	#printableArea, #printableArea *{
+		visibility: visible;
+	}
+	#printableArea{
+		position: absolute;
+		left: 0;
+		top: 0;
+		margin: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	#printableArea table td {
+      border: 1px solid black;
+      padding: .5rem .5rem;
+      -webkit-print-color-adjust:exact;
+	}
+	#printableArea .thead-print{
+		background-color: #e2e3e5;
+		-webkit-print-color-adjust:exact;
+	} 
 }
 #printableArea table td {
-      border: 1px solid #000;
-      padding: 8px;
+      border: 1px solid black;
+      padding: .5rem .5rem;
+      -webkit-print-color-adjust:exact;
 }
 #printableArea .thead-print{
 background-color: #e2e3e5;
@@ -56,15 +87,22 @@ background-color: #e2e3e5;
                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                 </svg>
                 </button>
+                <div style="display: flex; align-items: flex-end; margin-left: 10px; font-size: 20px;">
+						<b>검색결과&nbsp;</b>
+						<span style="color: red;">${cnt}</span>
+						<span>건</span>
+					</div>
               </div>
         </div>
         <button type="button" class="btn btn-success" id="print-btn">🖨 인쇄</button>
     </div>
-    <%-- <div class="no-print">
+    <div style="width: 100%; text-align: -webkit-center;">
+    <div id="printableArea" style="width:210mm; height:297mm; ">
     <div style="display: flex; align-items: center; justify-content: space-between;">
     	<h2>비콘 목록</h2>
     	<span id="today"></span>
     </div>
+    <%-- 
     <table class="table print-table" style="text-align: center;">
         <thead class="table-secondary" id="print-table-head">
             <tr>
@@ -109,33 +147,47 @@ background-color: #e2e3e5;
     </table>
     </div> --%>
     <br>
-   	<div id="printableArea" style="width:210mm; height:297mm; ">
-   	<div>
-        <table class="table"
-                style="text-align: center; width: 100%; height:100%; font-size: 13px; border: 1px solid black; ">
+   	
+   	<c:forEach var="beacon" items="${beaconList }">
+        <table class="table-print"
+                style="text-align: center; width: 100%; font-size: 13px; border: 1px solid black; margin-bottom: 5px;">
+                
                     <tr>
-                        <td style="width: 5%; border-right : 1px solid black; background-color: #e2e3e5;" class="thead-print">NO.</td>
-                        <td style="width: 15%; background-color: #e2e3e5;" class="thead-print">회사명</td>
-                        <td style="width: 25%;">(주)에이투지시스템</td>
-                        <td style="width: 15%; background-color: #e2e3e5;" class="thead-print">Major</td>
-                        <td style="width: 10%;">12345</td>
-                        <td class="thead-print">참고 사항</td>
+                        <td style="width: 6%; background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" rowspan="3">${beacon.beaconNumber }</td>
+                        <td style="width: 8%; background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" class="thead-print">회사명</td>
+                        <td style="width: 33%; border: 1px solid black; padding: .5rem .5rem;">${beacon.comName }</td>
+                        <td style="width: 13%; background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" class="thead-print">Major</td>
+                        <td style="width: 10%; border: 1px solid black; padding: .5rem .5rem;">${beacon.major }</td>
+                        <td style="width: 30%; background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" class="thead-print">참고 사항</td>
                     </tr>
                     <tr>
-                        <td>50</td>
-                        <td class="thead-print">cpn</td>
-                        <td>1232561556</td>
-                        <td class="thead-print">minor</td>
-                        <td>55555</td>
-                        <td rowspan="2">참고사항입니다</tD>
+                        <td style=" background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" class="thead-print">C.P.N</td>
+                        <td style=" border: 1px solid black; padding: .5rem .5rem;">${beacon.comNumber }</td>
+                        <td style=" background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" class="thead-print">Minor</td>
+                        <td style=" border: 1px solid black; padding: .5rem .5rem;">${beacon.minor }</td>
+                        <td style=" border: 1px solid black; padding: .5rem .5rem;" rowspan="2" id="print-note">
+							<c:choose>
+								<c:when test="${fn:length(beacon.note) > 15}">
+							    		${fn:substring(beacon.note, 0, 15)}...
+							  	</c:when>
+								<c:otherwise>${beacon.note }</c:otherwise>
+							</c:choose>
+						</td>
                     </tr>
                     <tr>
-                        <td class="thead-print">UUID</td>
-                        <td colspan="2" style="font-size: 11px;">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</td>
-                        <td class="thead-print">비콘상태</td>
-                        <td>정상</td>
+                        <td style=" background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" class="thead-print">UUID</td>
+                        <td style="font-size: 11px; vertical-align: middle; border: 1px solid black; padding: .5rem .5rem;">${beacon.uuid }</td>
+                        <td style=" background-color: #e2e3e5; border: 1px solid black; padding: .5rem .5rem;" class="thead-print">비콘상태</td>
+                        <td>
+                        	<c:choose>
+			                 <c:when test="${beacon.use == 1 }">정상</c:when>
+			                 <c:when test="${beacon.use == 0 }">중지</c:when>
+			                </c:choose>
+			            </td>
                     </tr>
+                 
             </table>
+            </c:forEach>
     </div>
     </div>
 	<form action="/beacon/printBeacon.do" method="get" name="searchPage">
@@ -176,10 +228,7 @@ background-color: #e2e3e5;
  			let searchType = $('#searchType').val();
  			let searchName = $('#searchName').val();
  			if(searchName == null || searchName == ''){
- 				$('#searchName').addClass('null-check');
- 				setTimeout(function(){
- 					$('#searchName').removeClass('null-check');
- 				}, 2000);
+ 				window.location.href = "/beacon/printBeacon.do";
  			}else{
  	    		form.find('input[name="searchType"]').val(searchType);
  	    		form.find('input[name="searchName"]').val(searchName);

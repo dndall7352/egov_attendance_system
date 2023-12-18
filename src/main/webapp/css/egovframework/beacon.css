@@ -3,7 +3,7 @@
    
 }
 
-table.table-striped.table-hover td, .table td {
+table.table-striped.table-hover td, .table.select-beacon-table td{
     border: 1px solid #fff;
     text-align: center;
 }
@@ -88,7 +88,8 @@ td[rowspan] {
     font-weight: 600;
 }
 .table.select-beacon-table td{
-	height: 50px;
+	padding: 0.3rem 0.3rem;
+	height : 40px;
 	vertical-align: middle;
 }
 textarea[name="note"] {
@@ -109,7 +110,7 @@ textarea[name="note"] {
 #beacon-state{
 	display: flex; 
 	width: 100px; 
-	height: 40px; 
+	height: 35px; 
 	background-color: #5B9BD5; 
 	border-radius: 30px; 
 	align-items: center; 
@@ -134,20 +135,6 @@ color: var(--bs-body-color);
 	cursor: pointer;
 	user-select: none;
 }
-@media print{
-	.no-print{
-		visibility: hidden;
-	}
-	
-	
-	#printableArea table td {
-	
-      border: 1px solid #000;
-      padding: 8px;
-       -webkit-print-color-adjust:exact;
-}
-#printableArea .thead-print{
-background-color: #e2e3e5;
- -webkit-print-color-adjust:exact;
-} 
+.table{
+	 margin-bottom: 0.5rem;
 }
